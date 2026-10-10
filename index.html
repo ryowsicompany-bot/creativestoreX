@@ -3,31 +3,45 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Creative Store PRO</title>
+    <title>Creative Store PRO & Card Studio</title>
     <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
     <!-- Phosphor Icons -->
     <script src="https://unpkg.com/@phosphor-icons/web"></script>
     
     <style>
-        /* Custom scrollbar */
-        textarea::-webkit-scrollbar, body::-webkit-scrollbar {
-            width: 8px;
+        /* Slow Moving Blue-Black Gradient Background */
+        @keyframes slowGradient {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
         }
-        textarea::-webkit-scrollbar-track, body::-webkit-scrollbar-track {
-            background: #0f172a;
+
+        .slow-gradient-bg {
+            background: linear-gradient(-45deg, #020617, #070f26, #0d1b3e, #020617, #051530, #030a1c);
+            background-size: 400% 400%;
+            animation: slowGradient 28s ease infinite;
         }
-        textarea::-webkit-scrollbar-thumb, body::-webkit-scrollbar-thumb {
-            background: #334155;
+
+        /* Custom scrollbar styling */
+        textarea::-webkit-scrollbar, body::-webkit-scrollbar, div::-webkit-scrollbar {
+            width: 6px;
+            height: 6px;
+        }
+        textarea::-webkit-scrollbar-track, body::-webkit-scrollbar-track, div::-webkit-scrollbar-track {
+            background: #020617;
+        }
+        textarea::-webkit-scrollbar-thumb, body::-webkit-scrollbar-thumb, div::-webkit-scrollbar-thumb {
+            background: #1e293b;
             border-radius: 8px;
         }
-        textarea::-webkit-scrollbar-thumb:hover, body::-webkit-scrollbar-thumb:hover {
-            background: #475569;
+        textarea::-webkit-scrollbar-thumb:hover, body::-webkit-scrollbar-thumb:hover, div::-webkit-scrollbar-thumb:hover {
+            background: #334155;
         }
 
         @keyframes puzzlePulse {
-            0%, 100% { opacity: 0.4; transform: scale(0.98); }
-            50% { opacity: 1; transform: scale(1); }
+            0%, 100% { opacity: 0.3; transform: scale(0.98); }
+            50% { opacity: 0.8; transform: scale(1); }
         }
         
         .puzzle-block {
@@ -36,7 +50,6 @@
         
         .puzzle-delay-1 { animation-delay: 0.15s; }
         .puzzle-delay-2 { animation-delay: 0.30s; }
-        .puzzle-delay-3 { animation-delay: 0.45s; }
 
         @keyframes slowSpin {
             from { transform: rotate(0deg); }
@@ -47,70 +60,156 @@
         }
 
         @keyframes pulseGlow {
-            0%, 100% { transform: scale(1); opacity: 0.6; }
-            50% { transform: scale(1.15); opacity: 0.9; }
+            0%, 100% { transform: scale(1); opacity: 0.5; }
+            50% { transform: scale(1.15); opacity: 0.8; }
         }
         .animate-pulse-glow {
-            animation: pulseGlow 3s ease-in-out infinite;
+            animation: pulseGlow 4s ease-in-out infinite;
         }
 
         @keyframes floatSlow {
             0%, 100% { transform: translateY(0px); }
-            50% { transform: translateY(-10px); }
+            50% { transform: translateY(-8px); }
         }
         .animate-float {
             animation: floatSlow 4s ease-in-out infinite;
         }
+        
+        /* New Animations for Top 10 Leaderboard */
+        @keyframes slideInUp {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .animate-slide-up {
+            animation: slideInUp 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+            opacity: 0;
+        }
+        
+        .shine-effect {
+            position: relative;
+            overflow: hidden;
+        }
+        .shine-effect::before {
+            content: '';
+            position: absolute;
+            top: 0; left: -100%; width: 50%; height: 100%;
+            background: linear-gradient(to right, transparent, rgba(255,255,255,0.1), transparent);
+            transform: skewX(-20deg);
+            animation: shine 3s infinite;
+        }
+        @keyframes shine {
+            100% { left: 200%; }
+        }
 
-        /* Glassmorphism utility */
-        .glass-panel {
-            background: rgba(15, 23, 42, 0.75);
+        .sidebar-transition {
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .glass-card {
+            background: rgba(15, 23, 42, 0.7);
             backdrop-filter: blur(16px);
             -webkit-backdrop-filter: blur(16px);
-            border: 1px solid rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(59, 130, 246, 0.18);
         }
+
+        .glass-card-hover:hover {
+            background: rgba(30, 41, 59, 0.8);
+            border-color: rgba(96, 165, 250, 0.4);
+            box-shadow: 0 10px 30px -10px rgba(37, 99, 235, 0.25);
+        }
+        
+        .leaderboard-card {
+            transition: all 0.3s ease;
+        }
+        .leaderboard-card:hover {
+            transform: scale(1.02);
+            z-index: 10;
+            box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.5);
+            background: rgba(30, 41, 59, 0.9);
+        }
+
+        /* Cyber HUD finish: restrained grid, micro-lines and technical corner marks */
+        body {
+            background-image:
+                linear-gradient(rgba(56,189,248,.035) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(56,189,248,.035) 1px, transparent 1px),
+                radial-gradient(ellipse at 50% 0%, rgba(14,165,233,.12), transparent 58%);
+            background-size: 36px 36px, 36px 36px, auto;
+            background-attachment: fixed;
+        }
+        .glass-card {
+            background-image: linear-gradient(115deg, rgba(56,189,248,.035), transparent 34%, rgba(99,102,241,.025));
+            box-shadow: inset 0 1px 0 rgba(125,211,252,.10), 0 14px 36px rgba(2,8,23,.16);
+        }
+        .hud-line {
+            height: 1px;
+            background: linear-gradient(90deg, transparent, rgba(34,211,238,.72), rgba(59,130,246,.42), transparent);
+            box-shadow: 0 0 8px rgba(34,211,238,.22);
+        }
+        .hud-corner { position: relative; }
+        .hud-corner::before, .hud-corner::after {
+            content: ''; position: absolute; width: 15px; height: 15px; pointer-events: none; opacity: .7;
+        }
+        .hud-corner::before { top: 7px; left: 7px; border-top: 1px solid #22d3ee; border-left: 1px solid #22d3ee; }
+        .hud-corner::after { right: 7px; bottom: 7px; border-right: 1px solid #3b82f6; border-bottom: 1px solid #3b82f6; }
+        .hud-theme-toggle { white-space: nowrap; display:inline-flex; align-items:center; justify-content:center; gap:.45rem; min-height:42px; padding:.55rem .85rem; border:1px solid rgba(34,211,238,.38); border-radius:.8rem; color:#a5f3fc; background:rgba(8,47,73,.42); font-size:11px; font-weight:800; letter-spacing:.08em; text-transform:uppercase; transition:all .2s ease; box-shadow:inset 0 0 14px rgba(34,211,238,.04); }
+        .hud-theme-toggle:hover { border-color:#22d3ee; box-shadow:0 0 18px rgba(34,211,238,.14); transform:translateY(-1px); }
+        .hud-theme-toggle:focus-visible { outline:2px solid #67e8f9; outline-offset:3px; }
+        .hud-label { font: 700 9px/1.2 ui-monospace, SFMono-Regular, Menlo, monospace; letter-spacing:.18em; color:rgba(103,232,249,.58); text-transform:uppercase; }
+
+        /* Accessible light theme; all original interactions/data remain unchanged */
+        body.light-theme { color:#172033 !important; background-color:#eef4fb !important; background-image:linear-gradient(rgba(37,99,235,.055) 1px,transparent 1px),linear-gradient(90deg,rgba(37,99,235,.055) 1px,transparent 1px),radial-gradient(ellipse at 50% 0%,rgba(125,211,252,.32),transparent 58%) !important; }
+        body.light-theme .slow-gradient-bg { background:linear-gradient(135deg,#f8fbff,#eaf2fb,#f5f8ff) !important; }
+        body.light-theme .glass-card { background-color:rgba(255,255,255,.82) !important; background-image:linear-gradient(115deg,rgba(14,165,233,.035),transparent 45%) !important; border-color:rgba(37,99,235,.20) !important; box-shadow:inset 0 1px 0 rgba(255,255,255,.9),0 12px 30px rgba(30,64,175,.08) !important; }
+        body.light-theme header { background:rgba(248,251,255,.92) !important; border-color:#cbd9ed !important; }
+        body.light-theme .text-white, body.light-theme .text-slate-100, body.light-theme .text-slate-200 { color:#18243a !important; }
+        body.light-theme .text-slate-300 { color:#40516c !important; }
+        body.light-theme .text-slate-400 { color:#5d6e87 !important; }
+        body.light-theme .text-slate-500 { color:#687b96 !important; }
+        body.light-theme .bg-slate-950, body.light-theme .bg-slate-950\/80, body.light-theme .bg-slate-950\/70, body.light-theme .bg-slate-900, body.light-theme .bg-slate-900\/80 { background-color:#e6eef8 !important; }
+        body.light-theme .bg-slate-900\/40, body.light-theme .bg-slate-950\/40 { background-color:rgba(226,236,248,.72) !important; }
+        body.light-theme .border-slate-800, body.light-theme .border-slate-800\/80, body.light-theme .border-slate-700, body.light-theme .divide-slate-800\/60 { border-color:#c9d7e9 !important; }
+        body.light-theme input, body.light-theme textarea, body.light-theme select { color:#18243a !important; background-color:#f8fbff !important; border-color:#c3d2e6 !important; }
+        body.light-theme input::placeholder, body.light-theme textarea::placeholder { color:#8190a6 !important; }
+        body.light-theme .hud-theme-toggle { color:#075985; background:rgba(224,242,254,.9); border-color:#7dd3fc; }
+        body.light-theme .hud-label { color:#0369a1; }
+        body.light-theme .hud-line { background:linear-gradient(90deg,transparent,rgba(2,132,199,.7),rgba(37,99,235,.4),transparent); }
+        @media (prefers-reduced-motion: reduce) { .animate-spin-slow, .animate-pulse-glow, .animate-float, .puzzle-block { animation:none !important; } }
     </style>
 </head>
-<body class="min-h-screen bg-slate-50 font-sans text-slate-900 relative selection:bg-indigo-500 selection:text-white">
+<body class="min-h-screen slow-gradient-bg font-sans text-slate-100 relative selection:bg-blue-600 selection:text-white">
 
-    <!-- CREATIVE LOADING SCREEN (Shows before main app opens) -->
+    <!-- CREATIVE LOADING SCREEN -->
     <div id="app-loader" class="fixed inset-0 z-50 bg-slate-950 flex flex-col items-center justify-center p-6 text-white transition-all duration-700 ease-out">
-        <!-- Ambient Glowing Background Orbs -->
-        <div class="absolute -top-24 -left-24 w-96 h-96 bg-indigo-600/20 rounded-full blur-3xl pointer-events-none animate-pulse-glow"></div>
-        <div class="absolute -bottom-24 -right-24 w-96 h-96 bg-purple-600/20 rounded-full blur-3xl pointer-events-none animate-pulse-glow" style="animation-delay: 1.5s;"></div>
-        <div class="absolute w-72 h-72 bg-pink-600/10 rounded-full blur-3xl pointer-events-none"></div>
+        <div class="absolute -top-24 -left-24 w-96 h-96 bg-blue-600/20 rounded-full blur-3xl pointer-events-none animate-pulse-glow"></div>
+        <div class="absolute -bottom-24 -right-24 w-96 h-96 bg-cyan-600/20 rounded-full blur-3xl pointer-events-none animate-pulse-glow" style="animation-delay: 1.5s;"></div>
 
         <div class="relative z-10 flex flex-col items-center text-center max-w-sm w-full">
-            <!-- Animated Hero Emblem -->
             <div class="relative mb-8 flex items-center justify-center">
-                <div class="w-24 h-24 rounded-3xl bg-gradient-to-tr from-indigo-600 via-purple-600 to-pink-500 p-0.5 shadow-2xl shadow-indigo-500/40 animate-float">
+                <div class="w-24 h-24 rounded-3xl bg-gradient-to-tr from-blue-600 via-indigo-600 to-cyan-400 p-0.5 shadow-2xl shadow-blue-500/40 animate-float">
                     <div class="w-full h-full bg-slate-950 rounded-[22px] flex items-center justify-center relative overflow-hidden">
-                        <div class="absolute inset-0 bg-gradient-to-tr from-indigo-500/20 to-purple-500/20 animate-pulse-glow"></div>
-                        <i class="ph-fill ph-sparkle text-4xl text-transparent bg-clip-text bg-gradient-to-r from-indigo-400 via-purple-300 to-pink-400 animate-spin-slow"></i>
+                        <div class="absolute inset-0 bg-gradient-to-tr from-blue-500/20 to-cyan-500/20 animate-pulse-glow"></div>
+                        <i class="ph-fill ph-sparkle text-4xl text-transparent bg-clip-text bg-gradient-to-r from-blue-400 via-cyan-300 to-indigo-400 animate-spin-slow"></i>
                     </div>
                 </div>
-                <!-- Concentric ring -->
-                <div class="absolute -inset-3 rounded-full border border-indigo-500/20 animate-spin-slow"></div>
+                <div class="absolute -inset-3 rounded-full border border-blue-500/20 animate-spin-slow"></div>
             </div>
 
-            <!-- Title Branding -->
-            <h1 class="text-3xl font-black tracking-tight mb-1 bg-gradient-to-r from-white via-indigo-100 to-slate-300 bg-clip-text text-transparent">
-                Creative<span class="bg-gradient-to-r from-indigo-400 to-purple-400 bg-clip-text text-transparent">Store</span>
+            <h1 class="text-3xl font-black tracking-tight mb-1 bg-gradient-to-r from-white via-blue-100 to-slate-300 bg-clip-text text-transparent">
+                Creative<span class="bg-gradient-to-r from-blue-400 to-cyan-400 bg-clip-text text-transparent">Store</span>
             </h1>
-            <p class="text-xs font-semibold uppercase tracking-widest text-indigo-400/80 mb-8">Studio Suite PRO</p>
+            <p class="text-xs font-semibold uppercase tracking-widest text-blue-400/80 mb-8">Studio Suite PRO</p>
 
-            <!-- Creative Loader Progress Bar -->
             <div class="w-full bg-slate-900/80 p-1.5 rounded-full border border-slate-800/80 shadow-inner mb-4 relative overflow-hidden">
-                <div id="loader-bar" class="h-2 bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500 rounded-full transition-all duration-300 ease-out w-0 shadow-lg shadow-indigo-500/50"></div>
+                <div id="loader-bar" class="h-2 bg-gradient-to-r from-blue-500 via-cyan-400 to-indigo-500 rounded-full transition-all duration-300 ease-out w-0 shadow-lg shadow-blue-500/50"></div>
             </div>
 
-            <!-- Loader Status Text & Percentage -->
             <div class="flex items-center justify-between w-full px-1 text-xs">
                 <span id="loader-status" class="text-slate-400 font-medium flex items-center gap-2">
-                    <i class="ph-bold ph-circle-notch animate-spin text-indigo-400"></i>
-                    Initializing Creative Portal...
+                    <i class="ph-bold ph-circle-notch animate-spin text-blue-400"></i>
+                    Connecting to Google Sheet...
                 </span>
-                <span id="loader-percent" class="font-mono font-bold text-indigo-300">0%</span>
+                <span id="loader-percent" class="font-mono font-bold text-blue-300">0%</span>
             </div>
         </div>
     </div>
@@ -118,25 +217,25 @@
     <!-- Toast Notification Container -->
     <div id="toast-container" class="fixed bottom-6 right-6 z-50 flex flex-col gap-2 pointer-events-none"></div>
 
-    <!-- The Secret Blue Dot (Admin Trigger) -->
+    <!-- The Secret Blue Dot (Admin Trigger on top-left) -->
     <div id="secret-dot" 
-         class="fixed top-3 left-3 w-3.5 h-3.5 bg-indigo-500 rounded-full cursor-pointer z-40 opacity-40 hover:opacity-100 ring-4 ring-indigo-200 transition-all shadow-md hover:scale-125"
-         title="Admin Login (Click 3x)">
+         class="fixed top-3 left-3 w-4 h-4 bg-blue-500 rounded-full cursor-pointer z-40 opacity-50 hover:opacity-100 ring-4 ring-blue-500/20 transition-all shadow-lg shadow-blue-500/50 hover:scale-125"
+         title="Card Studio Access (Click 3x)">
     </div>
 
-    <!-- MAIN STORE VIEW -->
+    <!-- MAIN STORE DASHBOARD VIEW -->
     <div id="store-view" class="block">
         <!-- Header -->
-        <header class="bg-white/80 backdrop-blur-md border-b border-slate-200/80 pt-5 pb-5 px-6 sticky top-0 z-30 shadow-sm">
-            <div class="max-w-6xl mx-auto flex items-center justify-between">
+        <header class="bg-slate-950/70 backdrop-blur-xl border-b border-blue-900/30 pt-5 pb-5 px-6 sticky top-0 z-30 shadow-2xl">
+            <div class="max-w-7xl mx-auto flex items-center justify-between">
                 <div class="flex items-center gap-3">
-                    <div class="w-10 h-10 bg-gradient-to-tr from-indigo-600 via-purple-600 to-pink-500 rounded-2xl flex items-center justify-center text-white shadow-lg shadow-indigo-500/25 ring-4 ring-indigo-500/10">
+                    <div class="w-10 h-10 bg-gradient-to-tr from-blue-600 via-indigo-600 to-cyan-400 rounded-2xl flex items-center justify-center text-white shadow-lg shadow-blue-500/30 ring-4 ring-blue-500/10">
                         <i class="ph-fill ph-sparkle text-xl animate-spin-slow"></i>
                     </div>
                     <div>
-                        <h1 class="text-xl sm:text-2xl font-black tracking-tight bg-gradient-to-r from-slate-900 via-indigo-950 to-slate-800 bg-clip-text text-transparent flex items-center gap-2">
-                            Creative<span class="bg-gradient-to-r from-indigo-600 to-purple-600 bg-clip-text text-transparent">Store</span>
-                            <span class="text-[10px] font-extrabold tracking-widest px-2 py-0.5 rounded-full bg-indigo-50 text-indigo-600 border border-indigo-200 uppercase">PRO</span>
+                        <h1 class="text-xl sm:text-2xl font-black tracking-tight text-white flex items-center gap-2">
+                            Creative<span class="bg-gradient-to-r from-blue-400 to-cyan-400 bg-clip-text text-transparent">Store</span>
+                            <span class="text-[10px] font-extrabold tracking-widest px-2 py-0.5 rounded-full bg-blue-950/80 text-blue-400 border border-blue-500/30 uppercase">PRO</span>
                         </h1>
                         <p class="text-xs text-slate-400 font-medium hidden sm:block">Empowering Next-Gen Workflows</p>
                     </div>
@@ -145,101 +244,128 @@
         </header>
 
         <!-- Creative Workflow Hero Section -->
-        <section class="max-w-6xl mx-auto px-6 pt-8 pb-2">
-            <div class="relative overflow-hidden rounded-3xl bg-gradient-to-r from-indigo-900 via-slate-900 to-purple-950 text-white p-8 sm:p-10 shadow-2xl shadow-indigo-950/20 border border-indigo-800/40">
-                <!-- Decorative background blur elements -->
-                <div class="absolute -right-10 -bottom-10 w-72 h-72 bg-indigo-500/10 rounded-full blur-3xl pointer-events-none"></div>
-                <div class="absolute right-1/3 -top-12 w-48 h-48 bg-purple-500/15 rounded-full blur-2xl pointer-events-none"></div>
+        <section class="max-w-7xl mx-auto px-6 pt-8 pb-2">
+            <div class="relative overflow-hidden rounded-3xl glass-card text-white p-8 sm:p-10 shadow-2xl shadow-blue-950/40 border border-blue-500/20">
+                <div class="absolute -right-10 -bottom-10 w-80 h-80 bg-blue-600/15 rounded-full blur-3xl pointer-events-none"></div>
                 
                 <div class="relative z-10 max-w-2xl">
-                    <div class="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-indigo-500/20 border border-indigo-400/30 text-indigo-200 text-xs font-semibold mb-4 backdrop-blur-md">
-                        <i class="ph-bold ph-lightning text-amber-400"></i> Workflow Optimization Hub
+                    <div class="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-blue-500/20 border border-blue-400/30 text-blue-200 text-xs font-semibold mb-4 backdrop-blur-md">
+                        <i class="ph-bold ph-lightning text-cyan-400"></i> Workflow Optimization Hub
                     </div>
                     <h2 class="text-2xl sm:text-4xl font-extrabold tracking-tight leading-tight mb-3">
                         Optimize Your Work. <br />
-                        <span class="bg-gradient-to-r from-indigo-300 via-purple-300 to-pink-300 bg-clip-text text-transparent">Make Creative Process Easier.</span>
+                        <span class="bg-gradient-to-r from-blue-300 via-cyan-300 to-indigo-300 bg-clip-text text-transparent">Make Creative Process Easier.</span>
                     </h2>
                     <p class="text-slate-300 text-sm sm:text-base leading-relaxed mb-6 font-normal">
                         Discover specialized creative utilities engineered to accelerate repetitive tasks, eliminate bottlenecks, and seamlessly upgrade your daily productivity pipeline.
                     </p>
-                    <div class="flex flex-wrap items-center gap-3 text-xs font-medium text-slate-300">
-                        <span class="flex items-center gap-1.5 bg-white/10 px-3 py-1.5 rounded-lg border border-white/10"><i class="ph-bold ph-check-circle text-emerald-400"></i> Instant Deployment</span>
-                        <span class="flex items-center gap-1.5 bg-white/10 px-3 py-1.5 rounded-lg border border-white/10"><i class="ph-bold ph-check-circle text-emerald-400"></i> Streamlined Interface</span>
-                        <span class="flex items-center gap-1.5 bg-white/10 px-3 py-1.5 rounded-lg border border-white/10"><i class="ph-bold ph-check-circle text-emerald-400"></i> High Performance</span>
-                    </div>
                 </div>
             </div>
         </section>
 
         <!-- Main Content -->
-        <main class="max-w-6xl mx-auto px-6 py-8">
-            <div id="mock-warning" class="hidden bg-orange-100 border border-orange-300 text-orange-800 p-4 rounded-xl mb-8 flex items-center gap-3 text-sm">
-                <span>⚠️ <strong>Not Connected:</strong> The app is showing fallback data. Click the blue dot top-left 3x to access Admin Mode (mock pin: 1234).</span>
+        <main class="max-w-7xl mx-auto px-6 py-8">
+            <div id="mock-warning" class="hidden bg-amber-950/50 border border-amber-500/30 text-amber-200 p-4 rounded-xl mb-8 flex items-center justify-between text-sm shadow-sm backdrop-blur-md">
+                <span class="flex items-center gap-2">
+                    <i class="ph-bold ph-warning text-lg text-amber-400"></i>
+                    <span><strong>Fallback Mode Active:</strong> Using local session data. Click 3x on top-left dot to open Card Studio (PIN: 1234).</span>
+                </span>
             </div>
+
+            <!-- SEARCH, FILTER & SORTING BAR -->
+            <div class="mb-8 flex flex-col md:flex-row items-stretch md:items-center justify-between gap-4 glass-card p-4 rounded-2xl border border-blue-500/20 shadow-lg">
+                <div class="flex items-center gap-2 flex-grow max-w-xl">
+                  <div class="relative flex-grow max-w-md">
+                    <i class="ph ph-magnifying-glass absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400 text-lg"></i>
+                    <input 
+                        type="text" 
+                        id="store-search-input" 
+                        placeholder="Search creative tools..." 
+                        class="w-full pl-10 pr-10 py-2.5 rounded-xl bg-slate-950/80 border border-slate-700 text-white text-xs focus:ring-2 focus:ring-blue-500 outline-none transition-all placeholder:text-slate-500"
+                    />
+                    <button id="store-clear-search-btn" class="hidden absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-white text-xs">
+                        <i class="ph-bold ph-x-circle text-base"></i>
+                    </button>
+                  </div>
+                  <button id="theme-toggle" class="hud-theme-toggle" type="button" aria-pressed="false" title="Switch between dark and light appearance">
+                    <i id="theme-toggle-icon" class="ph-bold ph-sun text-base"></i>
+                    <span id="theme-toggle-label">Light mode</span>
+                  </button>
+                </div>
+
+                <div class="flex items-center gap-3 flex-wrap">
+                    <div class="flex items-center gap-1.5 bg-slate-950/80 p-1 rounded-xl border border-slate-800 text-xs">
+                        <button onclick="setCategoryFilter('all')" id="cat-btn-all" class="px-3 py-1.5 rounded-lg font-extrabold transition-all bg-blue-600 text-white shadow-sm">
+                            All Tools
+                        </button>
+                        <button onclick="setCategoryFilter('shader')" id="cat-btn-shader" class="px-3 py-1.5 rounded-lg font-semibold text-slate-400 hover:text-white transition-all">
+                            3D / VFX
+                        </button>
+                        <button onclick="setCategoryFilter('design')" id="cat-btn-design" class="px-3 py-1.5 rounded-lg font-semibold text-slate-400 hover:text-white transition-all">
+                            UI / UX
+                        </button>
+                        <button onclick="setCategoryFilter('utility')" id="cat-btn-utility" class="px-3 py-1.5 rounded-lg font-semibold text-slate-400 hover:text-white transition-all">
+                            Utilities
+                        </button>
+                    </div>
+
+                    <div class="flex items-center gap-2 bg-slate-950/80 px-3 py-1.5 rounded-xl border border-slate-800 text-xs">
+                        <i class="ph-bold ph-sort-ascending text-blue-400"></i>
+                        <span class="text-slate-400 font-medium">Sort:</span>
+                        <select id="store-sort-select" onchange="handleSortChange()" class="bg-transparent text-white font-bold outline-none cursor-pointer">
+                            <option value="newest" class="bg-slate-900 text-white">Default / Newest</option>
+                            <option value="popular" class="bg-slate-900 text-white">Most Downloaded</option>
+                            <option value="name" class="bg-slate-900 text-white">Alphabetical</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+            <div class="hud-line -mt-5 mb-8 opacity-70" aria-hidden="true"></div>
 
             <!-- In-App Skeleton Loading Spinner -->
             <div id="loading-spinner" class="py-6">
                 <div class="flex items-center justify-center gap-2 mb-6">
-                    <div class="w-3 h-3 bg-indigo-600 rounded-sm animate-bounce" style="animation-delay: 0s;"></div>
-                    <div class="w-3 h-3 bg-purple-600 rounded-sm animate-bounce" style="animation-delay: 0.15s;"></div>
-                    <div class="w-3 h-3 bg-pink-600 rounded-sm animate-bounce" style="animation-delay: 0.3s;"></div>
-                    <span class="text-xs font-extrabold uppercase tracking-widest text-slate-400 ml-2">Assembling Creative Pipeline...</span>
+                    <div class="w-3 h-3 bg-blue-500 rounded-sm animate-bounce" style="animation-delay: 0s;"></div>
+                    <div class="w-3 h-3 bg-cyan-400 rounded-sm animate-bounce" style="animation-delay: 0.15s;"></div>
+                    <div class="w-3 h-3 bg-indigo-500 rounded-sm animate-bounce" style="animation-delay: 0.3s;"></div>
+                    <span class="text-xs font-extrabold uppercase tracking-widest text-slate-400 ml-2">Loading App Cards...</span>
                 </div>
 
                 <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-                    <!-- Skeleton 1 -->
-                    <div class="bg-white rounded-2xl p-4 shadow-md border border-slate-100 flex flex-col h-72">
-                        <div class="grid grid-cols-2 gap-1.5 h-44 rounded-xl overflow-hidden mb-4 p-1 bg-slate-100">
-                            <div class="bg-indigo-100/70 rounded-lg puzzle-block"></div>
-                            <div class="bg-purple-100/70 rounded-lg puzzle-block puzzle-delay-1"></div>
-                            <div class="bg-slate-200/80 rounded-lg puzzle-block puzzle-delay-2"></div>
-                            <div class="bg-indigo-50/90 rounded-lg puzzle-block puzzle-delay-3"></div>
-                        </div>
-                        <div class="h-4 bg-slate-200 rounded w-3/4 mb-2 puzzle-block"></div>
-                        <div class="h-3 bg-slate-100 rounded w-1/2 mb-auto puzzle-block puzzle-delay-1"></div>
-                        <div class="flex justify-between items-center pt-3 border-t border-slate-50">
-                            <div class="h-6 bg-slate-100 rounded w-16 puzzle-block"></div>
-                            <div class="h-8 bg-indigo-200 rounded-xl w-20 puzzle-block"></div>
-                        </div>
+                    <div class="glass-card rounded-2xl p-4 flex flex-col h-72">
+                        <div class="h-44 rounded-xl bg-slate-800/60 mb-4 puzzle-block"></div>
+                        <div class="h-4 bg-slate-700/60 rounded w-3/4 mb-2 puzzle-block"></div>
+                        <div class="h-3 bg-slate-800/60 rounded w-1/2 mb-auto puzzle-block"></div>
                     </div>
-
-                    <!-- Skeleton 2 -->
-                    <div class="bg-white rounded-2xl p-4 shadow-md border border-slate-100 flex flex-col h-72">
-                        <div class="grid grid-cols-2 gap-1.5 h-44 rounded-xl overflow-hidden mb-4 p-1 bg-slate-100">
-                            <div class="bg-purple-100/70 rounded-lg puzzle-block puzzle-delay-1"></div>
-                            <div class="bg-indigo-100/70 rounded-lg puzzle-block puzzle-delay-2"></div>
-                            <div class="bg-indigo-50/90 rounded-lg puzzle-block puzzle-delay-3"></div>
-                            <div class="bg-slate-200/80 rounded-lg puzzle-block"></div>
-                        </div>
-                        <div class="h-4 bg-slate-200 rounded w-5/6 mb-2 puzzle-block puzzle-delay-1"></div>
-                        <div class="h-3 bg-slate-100 rounded w-2/3 mb-auto puzzle-block puzzle-delay-2"></div>
-                        <div class="flex justify-between items-center pt-3 border-t border-slate-50">
-                            <div class="h-6 bg-slate-100 rounded w-16 puzzle-block puzzle-delay-1"></div>
-                            <div class="h-8 bg-indigo-200 rounded-xl w-20 puzzle-block puzzle-delay-2"></div>
-                        </div>
-                    </div>
-
-                    <!-- Skeleton 3 -->
-                    <div class="bg-white rounded-2xl p-4 shadow-md border border-slate-100 flex flex-col h-72 hidden lg:flex">
-                        <div class="grid grid-cols-2 gap-1.5 h-44 rounded-xl overflow-hidden mb-4 p-1 bg-slate-100">
-                            <div class="bg-slate-200/80 rounded-lg puzzle-block puzzle-delay-2"></div>
-                            <div class="bg-indigo-50/90 rounded-lg puzzle-block puzzle-delay-3"></div>
-                            <div class="bg-indigo-100/70 rounded-lg puzzle-block"></div>
-                            <div class="bg-purple-100/70 rounded-lg puzzle-block puzzle-delay-1"></div>
-                        </div>
-                        <div class="h-4 bg-slate-200 rounded w-2/3 mb-2 puzzle-block puzzle-delay-2"></div>
-                        <div class="h-3 bg-slate-100 rounded w-1/2 mb-auto puzzle-block puzzle-delay-3"></div>
-                        <div class="flex justify-between items-center pt-3 border-t border-slate-50">
-                            <div class="h-6 bg-slate-100 rounded w-16 puzzle-block puzzle-delay-2"></div>
-                            <div class="h-8 bg-indigo-200 rounded-xl w-20 puzzle-block"></div>
-                        </div>
+                    <div class="glass-card rounded-2xl p-4 flex flex-col h-72">
+                        <div class="h-44 rounded-xl bg-slate-800/60 mb-4 puzzle-block puzzle-delay-1"></div>
+                        <div class="h-4 bg-slate-700/60 rounded w-3/4 mb-2 puzzle-block puzzle-delay-1"></div>
+                        <div class="h-3 bg-slate-800/60 rounded w-1/2 mb-auto puzzle-block puzzle-delay-1"></div>
                     </div>
                 </div>
             </div>
 
-            <!-- App Cards Grid Container -->
-            <div id="apps-container" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 hidden">
-                <!-- App cards injected here via JS -->
+            <!-- DASHBOARD APP CARDS GRID CONTAINER -->
+            <div id="apps-container" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 min-h-[400px]">
+            </div>
+
+            <!-- PAGINATION CONTROLS BELOW GRID -->
+            <div id="pagination-container" class="mt-10 flex flex-col sm:flex-row items-center justify-between gap-4 pt-6 border-t border-slate-800/60">
+                <div class="text-xs text-slate-400 font-semibold" id="pagination-info">
+                    Showing 0 cards
+                </div>
+
+                <div class="flex items-center gap-2">
+                    <button id="prev-page-btn" class="flex items-center gap-1 px-3 py-2 rounded-xl bg-slate-900/80 border border-slate-700 text-slate-300 hover:bg-slate-800 hover:text-white text-xs font-bold transition-all disabled:opacity-40 disabled:cursor-not-allowed shadow-sm">
+                        <i class="ph-bold ph-caret-left"></i> Previous
+                    </button>
+
+                    <div id="page-dots" class="flex items-center gap-1.5 px-2"></div>
+
+                    <button id="next-page-btn" class="flex items-center gap-1 px-3 py-2 rounded-xl bg-slate-900/80 border border-slate-700 text-slate-300 hover:bg-slate-800 hover:text-white text-xs font-bold transition-all disabled:opacity-40 disabled:cursor-not-allowed shadow-sm">
+                        Next <i class="ph-bold ph-caret-right"></i>
+                    </button>
+                </div>
             </div>
         </main>
     </div>
@@ -265,109 +391,383 @@
     </div>
 
     <!-- PIN AUTH MODAL -->
-    <div id="pin-modal" class="hidden fixed inset-0 bg-slate-950/80 backdrop-blur-sm z-50 flex items-center justify-center p-4">
-        <div class="bg-white w-full max-w-sm rounded-3xl p-6 shadow-2xl border border-slate-100 relative animate-float">
-            <button id="close-pin-btn" class="absolute top-4 right-4 text-slate-400 hover:text-slate-600 p-2 rounded-full">
+    <div id="pin-modal" class="hidden fixed inset-0 bg-slate-950/80 backdrop-blur-md z-50 flex items-center justify-center p-4">
+        <div class="bg-slate-900 border border-blue-500/30 w-full max-w-sm rounded-3xl p-6 shadow-2xl relative text-white">
+            <button id="close-pin-btn" class="absolute top-4 right-4 text-slate-400 hover:text-white p-2 rounded-full">
                 <i class="ph ph-x text-xl"></i>
             </button>
-            <div class="w-12 h-12 bg-indigo-50 text-indigo-600 rounded-2xl flex items-center justify-center mb-4 text-2xl font-bold">
+            <div class="w-12 h-12 bg-blue-950 text-blue-400 border border-blue-500/30 rounded-2xl flex items-center justify-center mb-4 text-2xl font-bold">
                 <i class="ph-bold ph-lock-key"></i>
             </div>
-            <h3 class="text-xl font-extrabold text-slate-900 mb-1">Admin Access</h3>
-            <p class="text-xs text-slate-500 mb-4">Enter security PIN to create new app entries.</p>
+            <h3 class="text-xl font-extrabold text-white mb-1">Card Studio PIN</h3>
+            <p class="text-xs text-slate-400 mb-4">Enter security PIN to access Cards Studio.</p>
             
             <input 
                 type="password" 
                 id="pin-input" 
                 placeholder="Enter PIN" 
                 maxlength="8" 
-                class="w-full px-4 py-3 rounded-xl border border-slate-200 focus:ring-2 focus:ring-indigo-600 outline-none text-center text-lg font-mono tracking-widest mb-3"
+                class="w-full px-4 py-3 rounded-xl bg-slate-950 border border-slate-700 text-white focus:ring-2 focus:ring-blue-500 outline-none text-center text-lg font-mono tracking-widest mb-3"
             />
-            <div id="pin-error" class="hidden text-xs text-rose-500 font-medium text-center mb-3"></div>
+            <div id="pin-error" class="hidden text-xs text-rose-400 font-medium text-center mb-3"></div>
             
-            <button id="verify-pin-btn" class="w-full bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-3 rounded-xl transition-all flex justify-center items-center gap-2">
-                <span id="verify-text">Unlock Portal</span>
+            <button id="verify-pin-btn" class="w-full bg-blue-600 hover:bg-blue-500 text-white font-bold py-3 rounded-xl transition-all flex justify-center items-center gap-2 shadow-lg shadow-blue-600/30">
+                <span id="verify-text">Unlock Card Studio</span>
                 <i id="verify-spinner" class="ph ph-spinner animate-spin hidden text-xl"></i>
             </button>
         </div>
     </div>
 
-    <!-- ADMIN PANEL VIEW -->
-    <div id="admin-view" class="hidden min-h-screen bg-slate-50 p-6">
-        <div class="max-w-2xl mx-auto bg-white rounded-3xl shadow-xl p-8 border border-slate-100">
-            <button id="back-to-store-btn" class="flex items-center gap-2 text-slate-500 hover:text-slate-800 mb-6 transition-colors text-sm font-semibold">
-                <i class="ph ph-arrow-left text-xl"></i> Back to Store
-            </button>
+    <!-- DELETE CONFIRMATION MODAL -->
+    <div id="delete-modal" class="hidden fixed inset-0 bg-slate-950/80 backdrop-blur-md z-50 flex items-center justify-center p-4">
+        <div class="bg-slate-900 border border-slate-800 w-full max-w-md rounded-3xl p-6 shadow-2xl relative text-white">
+            <div class="w-12 h-12 bg-rose-950/80 text-rose-400 border border-rose-500/30 rounded-2xl flex items-center justify-center mb-4 text-2xl font-bold">
+                <i class="ph-bold ph-trash"></i>
+            </div>
+            <h3 class="text-xl font-extrabold text-white mb-1">Delete Card from Sheet?</h3>
+            <p class="text-xs text-slate-400 mb-4">This action will delete the row directly from your Google Sheet.</p>
             
-            <h1 class="text-2xl sm:text-3xl font-bold mb-8 flex items-center gap-3">
-                <i class="ph ph-plus-circle text-indigo-600 text-3xl"></i> Create New App Card
-            </h1>
-
-            <form id="add-app-form" class="space-y-6">
-                <div>
-                    <label class="block text-sm font-semibold mb-2">Image URLs (One per line)</label>
-                    <textarea 
-                        id="form-images" required
-                        placeholder="https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe&#10;https://images.unsplash.com/photo-1579783902614-a3fb3927b675"
-                        class="w-full h-32 p-3 border border-slate-200 rounded-xl focus:ring-2 focus:ring-indigo-600 outline-none resize-none text-sm font-mono"
-                    ></textarea>
-                    <p class="text-xs text-slate-400 mt-1">Paste multiple image links for auto-cycling preview carousel.</p>
-                </div>
-
-                <div>
-                    <label class="block text-sm font-semibold mb-2">
-                        Carousel Timer: <span id="timer-display" class="text-indigo-600">2 Seconds</span>
-                    </label>
-                    <input 
-                        type="range" id="form-timer" 
-                        min="2" max="10" value="2"
-                        class="w-full accent-indigo-600"
-                    />
-                </div>
-
-                <div>
-                    <label class="block text-sm font-semibold mb-2">Description</label>
-                    <textarea 
-                        id="form-description" required
-                        placeholder="Describe the utility or tool functionality..."
-                        class="w-full h-24 p-3 border border-slate-200 rounded-xl focus:ring-2 focus:ring-indigo-600 outline-none resize-none text-sm"
-                    ></textarea>
-                </div>
-
-                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                    <div>
-                        <label class="block text-sm font-semibold mb-2">File Size</label>
-                        <input 
-                            type="text" id="form-filesize" required
-                            placeholder="e.g. 25 MB"
-                            class="w-full p-3 border border-slate-200 rounded-xl focus:ring-2 focus:ring-indigo-600 outline-none text-sm"
-                        />
-                    </div>
-                    <div>
-                        <label class="block text-sm font-semibold mb-2">Download URL</label>
-                        <input 
-                            type="url" id="form-downloadurl" required
-                            placeholder="https://..."
-                            class="w-full p-3 border border-slate-200 rounded-xl focus:ring-2 focus:ring-indigo-600 outline-none text-sm"
-                        />
-                    </div>
-                </div>
-
-                <button type="submit" id="submit-app-btn" class="w-full bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-4 rounded-xl transition-all shadow-lg shadow-indigo-200 flex justify-center items-center gap-2">
-                    <i id="submit-icon" class="ph ph-check-circle text-xl"></i>
-                    <i id="submit-spinner" class="ph ph-spinner animate-spin hidden text-xl"></i>
-                    <span id="submit-text">Publish App Card</span>
+            <div id="delete-card-preview" class="p-3 bg-slate-950 border border-slate-800 rounded-xl text-xs text-slate-300 line-clamp-2 mb-6 italic"></div>
+            
+            <div class="flex items-center gap-3">
+                <button id="cancel-delete-btn" class="w-1/2 py-3 rounded-xl border border-slate-700 text-slate-300 font-bold text-sm hover:bg-slate-800 transition-all">
+                    Cancel
                 </button>
-            </form>
+                <button id="confirm-delete-btn" class="w-1/2 py-3 rounded-xl bg-rose-600 hover:bg-rose-500 text-white font-bold text-sm transition-all shadow-lg shadow-rose-900/40 flex justify-center items-center gap-2">
+                    <span>Delete Card</span>
+                    <i id="delete-spinner" class="ph ph-spinner animate-spin hidden text-lg"></i>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- CARD STUDIO VIEW (ADMIN PANEL) -->
+    <div id="admin-view" class="hidden min-h-screen flex flex-col">
+        <!-- Studio Header Bar -->
+        <header class="bg-slate-950/90 border-b border-blue-900/40 text-white py-4 px-6 sticky top-0 z-30 shadow-2xl backdrop-blur-xl">
+            <div class="max-w-7xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-4">
+                <div class="flex items-center gap-3 w-full sm:w-auto justify-between sm:justify-start">
+                    <div class="flex items-center gap-3">
+                        <div class="w-10 h-10 bg-blue-600 rounded-2xl flex items-center justify-center text-white shadow-lg shadow-blue-500/30">
+                            <i class="ph-bold ph-sliders text-xl"></i>
+                        </div>
+                        <div>
+                            <h1 class="text-lg font-black tracking-wide flex items-center gap-2">
+                                Card Studio
+                                <span class="text-[10px] bg-blue-500/20 text-blue-300 font-extrabold px-2.5 py-0.5 rounded-full border border-blue-400/30 uppercase">STUDIO PRO</span>
+                            </h1>
+                            <p class="text-[11px] text-slate-400 font-medium">Manage Cards Library & View Analytics Data</p>
+                        </div>
+                    </div>
+
+                    <button id="back-to-store-btn-mobile" class="sm:hidden flex items-center gap-1.5 bg-blue-600 hover:bg-blue-500 text-white px-3 py-1.5 rounded-xl text-xs font-bold transition-all">
+                        <i class="ph-bold ph-arrow-left"></i> Exit
+                    </button>
+                </div>
+
+                <!-- STUDIO NAVIGATION TABS -->
+                <div class="flex items-center bg-slate-900/90 p-1.5 rounded-2xl border border-slate-800 w-full sm:w-auto justify-center">
+                    <button id="tab-btn-cards" onclick="switchStudioTab('cards')" class="flex items-center gap-2 px-4 py-2 rounded-xl text-xs font-bold transition-all bg-blue-600 text-white shadow-md">
+                        <i class="ph-bold ph-cards text-sm"></i>
+                        <span>Tab 1: Cards Manager</span>
+                    </button>
+                    <button id="tab-btn-analytic" onclick="switchStudioTab('analytic')" class="flex items-center gap-2 px-4 py-2 rounded-xl text-xs font-bold transition-all text-slate-400 hover:text-white">
+                        <i class="ph-bold ph-chart-line-up text-sm"></i>
+                        <span>Tab 2: Analytic</span>
+                    </button>
+                </div>
+
+                <div class="hidden sm:flex items-center gap-3">
+                    <button id="back-to-store-btn" class="flex items-center gap-1.5 bg-blue-600 hover:bg-blue-500 text-white px-4 py-2 rounded-xl text-xs font-bold transition-all shadow-lg shadow-blue-600/30">
+                        <i class="ph-bold ph-arrow-left"></i> Exit Studio
+                    </button>
+                </div>
+            </div>
+        </header>
+
+        <!-- STUDIO TAB 1: CARDS MANAGER CONTENT -->
+        <div id="studio-tab-cards-content" class="flex-grow max-w-7xl w-full mx-auto p-4 sm:p-6 flex flex-col lg:flex-row gap-6 relative">
+            
+            <!-- LEFT PANEL: CARDS LIST -->
+            <aside id="studio-left-panel" class="w-full lg:w-96 glass-card rounded-3xl shadow-xl border border-blue-500/20 flex flex-col sidebar-transition overflow-hidden flex-shrink-0">
+                <div class="p-4 border-b border-slate-800/80 bg-slate-950/40">
+                    <div class="flex items-center justify-between mb-3">
+                        <h2 class="text-sm font-black text-white uppercase tracking-wider flex items-center gap-2">
+                            <i class="ph-bold ph-cards text-blue-400"></i> Cards Library
+                        </h2>
+                        <span id="cards-count-badge" class="bg-blue-950 text-blue-300 text-xs font-extrabold px-2.5 py-0.5 rounded-full border border-blue-500/30">
+                            0 Cards
+                        </span>
+                    </div>
+
+                    <div class="relative">
+                        <i class="ph ph-magnifying-glass absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 text-base"></i>
+                        <input 
+                            type="text" 
+                            id="studio-search-input" 
+                            placeholder="Search cards..." 
+                            class="w-full pl-9 pr-8 py-2 rounded-xl border border-slate-700 bg-slate-950 text-white text-xs focus:ring-2 focus:ring-blue-500 outline-none"
+                        />
+                        <button id="clear-search-btn" class="hidden absolute right-2.5 top-1/2 -translate-y-1/2 text-slate-400 hover:text-white text-xs">
+                            <i class="ph-bold ph-x-circle text-sm"></i>
+                        </button>
+                    </div>
+                </div>
+
+                <div id="studio-cards-list" class="divide-y divide-slate-800/60 overflow-y-auto max-h-[500px] lg:max-h-[calc(100vh-220px)] p-2">
+                </div>
+            </aside>
+
+            <!-- RIGHT PANEL: CREATE & RE-EDIT FORM PANEL -->
+            <main id="studio-right-panel" class="flex-grow glass-card rounded-3xl shadow-xl border border-blue-500/20 p-6 sm:p-8 flex flex-col">
+                <div class="flex items-center justify-between mb-6 pb-4 border-b border-slate-800/80">
+                    <div>
+                        <div class="flex items-center gap-2">
+                            <h2 id="form-title-heading" class="text-xl sm:text-2xl font-black text-white">
+                                Create New App Card
+                            </h2>
+                            <span id="form-mode-tag" class="px-2.5 py-0.5 rounded-full text-[10px] font-extrabold bg-emerald-950 text-emerald-400 border border-emerald-500/30 uppercase tracking-wider">
+                                CREATE MODE
+                            </span>
+                        </div>
+                        <p id="form-subtitle" class="text-xs text-slate-400 mt-1">Fill out card parameters to publish to Creative Store & Google Sheet.</p>
+                    </div>
+
+                    <button id="reset-form-btn" class="hidden flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-200 text-xs font-bold transition-all">
+                        <i class="ph-bold ph-plus"></i> New Card
+                    </button>
+                </div>
+
+                <form id="add-app-form" class="space-y-5">
+                    <div>
+                        <label class="block text-xs font-bold uppercase tracking-wider text-slate-300 mb-1.5">
+                            Image URLs / Google Drive Share Links (One per line)
+                        </label>
+                        <textarea 
+                            id="form-images" required
+                            placeholder="Paste a Google Drive image link here, one link per line: https://drive.google.com/file/d/FILE_ID/view?usp=sharing"
+                            class="w-full h-24 p-3 bg-slate-950 border border-slate-700 rounded-2xl text-white focus:ring-2 focus:ring-blue-500 outline-none resize-y text-xs font-mono"
+                        ></textarea>
+                        <p class="text-[11px] text-slate-400 mt-2 leading-relaxed">Google Drive images are supported. In Drive, set the image to <strong class="text-blue-300">General access → Anyone with the link → Viewer</strong>. Paste the normal share link; it will be converted for display automatically. Put each image link on a new line.</p>
+                        <div id="drive-image-preview" class="hidden mt-3 p-3 rounded-xl border border-blue-500/20 bg-slate-950/70">
+                            <div class="text-[10px] uppercase tracking-wider text-slate-400 mb-2">Link preview</div>
+                            <div id="drive-image-preview-items" class="flex flex-wrap gap-2"></div>
+                            <div id="drive-image-preview-status" class="text-[10px] text-slate-500 mt-2"></div>
+                        </div>
+                    </div>
+
+                    <div>
+                        <div class="flex justify-between items-center mb-1">
+                            <label class="block text-xs font-bold uppercase tracking-wider text-slate-300">
+                                Carousel Timer
+                            </label>
+                            <span id="timer-display" class="text-xs font-bold text-blue-400 bg-blue-950 px-2 py-0.5 rounded-lg border border-blue-500/30">
+                                2 Seconds
+                            </span>
+                        </div>
+                        <input 
+                            type="range" id="form-timer" 
+                            min="2" max="10" value="2"
+                            class="w-full accent-blue-500 cursor-pointer"
+                        />
+                    </div>
+                    
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                        <div>
+                            <label class="block text-xs font-bold uppercase tracking-wider text-slate-300 mb-1.5">
+                                Card Title
+                            </label>
+                            <input 
+                                type="text" id="form-title" required
+                                placeholder="e.g. RenderMaster 3D"
+                                class="w-full p-3 bg-slate-950 border border-slate-700 rounded-2xl text-white focus:ring-2 focus:ring-blue-500 outline-none text-xs font-bold"
+                            />
+                        </div>
+                        
+                        <div>
+                            <label class="block text-xs font-bold uppercase tracking-wider text-slate-300 mb-1.5">
+                                Tool Category
+                            </label>
+                            <select id="form-category" class="w-full p-3 bg-slate-950 border border-slate-700 rounded-2xl text-white focus:ring-2 focus:ring-blue-500 outline-none text-xs cursor-pointer appearance-none">
+                                <option value="shader" class="bg-slate-900 text-white">3D / VFX</option>
+                                <option value="design" class="bg-slate-900 text-white">UI / UX</option>
+                                <option value="utility" class="bg-slate-900 text-white">Utilities</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div>
+                        <label class="block text-xs font-bold uppercase tracking-wider text-slate-300 mb-1.5">
+                            Card Description
+                        </label>
+                        <textarea 
+                            id="form-description" required
+                            placeholder="Describe the utility or workflow tool functionality..."
+                            class="w-full h-24 p-3 bg-slate-950 border border-slate-700 rounded-2xl text-white focus:ring-2 focus:ring-blue-500 outline-none resize-none text-xs"
+                        ></textarea>
+                    </div>
+
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                        <div>
+                            <label class="block text-xs font-bold uppercase tracking-wider text-slate-300 mb-1.5">
+                                File Size
+                            </label>
+                            <input 
+                                type="text" id="form-filesize" required
+                                placeholder="e.g. 48 MB"
+                                class="w-full p-3 bg-slate-950 border border-slate-700 rounded-2xl text-white focus:ring-2 focus:ring-blue-500 outline-none text-xs"
+                            />
+                        </div>
+                        <div>
+                            <label class="block text-xs font-bold uppercase tracking-wider text-slate-300 mb-1.5">
+                                Download / Access URL
+                            </label>
+                            <input 
+                                type="url" id="form-downloadurl" required
+                                placeholder="https://..."
+                                class="w-full p-3 bg-slate-950 border border-slate-700 rounded-2xl text-white focus:ring-2 focus:ring-blue-500 outline-none text-xs"
+                            />
+                        </div>
+                    </div>
+
+                    <div>
+                        <label class="block text-xs font-bold uppercase tracking-wider text-slate-300 mb-1.5">
+                            Initial Download Count
+                        </label>
+                        <input 
+                            type="number" id="form-downloadcount" min="0" value="0"
+                            placeholder="0"
+                            class="w-full p-3 bg-slate-950 border border-slate-700 rounded-2xl text-white focus:ring-2 focus:ring-blue-500 outline-none text-xs font-mono"
+                        />
+                    </div>
+
+                    <div class="pt-2 flex items-center gap-3">
+                        <button type="submit" id="submit-app-btn" class="w-full bg-blue-600 hover:bg-blue-500 text-white font-extrabold py-3.5 rounded-2xl transition-all shadow-lg shadow-blue-600/30 flex justify-center items-center gap-2 text-sm">
+                            <i id="submit-icon" class="ph-bold ph-check-circle text-lg"></i>
+                            <i id="submit-spinner" class="ph ph-spinner animate-spin hidden text-lg"></i>
+                            <span id="submit-text">Publish App Card</span>
+                        </button>
+                    </div>
+                </form>
+            </main>
+        </div>
+
+        <!-- STUDIO TAB 2: ANALYTIC & TOP DOWNLOADS CONTENT -->
+        <div id="studio-tab-analytic-content" class="hidden flex-grow max-w-7xl w-full mx-auto p-4 sm:p-6 space-y-6">
+            
+            <!-- OVERVIEW STAT KPI CARDS -->
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+                <div class="glass-card rounded-2xl p-5 border border-blue-500/20 flex items-center justify-between">
+                    <div>
+                        <p class="text-xs font-bold uppercase tracking-wider text-slate-400">Total Downloads</p>
+                        <h3 id="stat-total-downloads" class="text-2xl sm:text-3xl font-black text-white mt-1">0</h3>
+                        <p class="text-[10px] text-blue-400 mt-1 font-semibold">Across all store tools</p>
+                    </div>
+                    <div class="w-12 h-12 bg-blue-950 text-blue-400 rounded-2xl flex items-center justify-center text-2xl border border-blue-500/30">
+                        <i class="ph-bold ph-download-simple"></i>
+                    </div>
+                </div>
+
+                <div class="glass-card rounded-2xl p-5 border border-blue-500/20 flex items-center justify-between">
+                    <div>
+                        <p class="text-xs font-bold uppercase tracking-wider text-slate-400">Top Performing Tool</p>
+                        <h3 id="stat-top-tool-name" class="text-sm font-extrabold text-cyan-300 mt-1 truncate max-w-[160px]">None</h3>
+                        <p id="stat-top-tool-count" class="text-[10px] text-slate-400 mt-1 font-semibold">0 downloads</p>
+                    </div>
+                    <div class="w-12 h-12 bg-cyan-950 text-cyan-400 rounded-2xl flex items-center justify-center text-2xl border border-cyan-500/30">
+                        <i class="ph-bold ph-trophy"></i>
+                    </div>
+                </div>
+
+                <div class="glass-card rounded-2xl p-5 border border-blue-500/20 flex items-center justify-between">
+                    <div>
+                        <p class="text-xs font-bold uppercase tracking-wider text-slate-400">Avg Downloads/Tool</p>
+                        <h3 id="stat-avg-downloads" class="text-2xl sm:text-3xl font-black text-white mt-1">0</h3>
+                        <p class="text-[10px] text-indigo-400 mt-1 font-semibold">Average conversion</p>
+                    </div>
+                    <div class="w-12 h-12 bg-indigo-950 text-indigo-400 rounded-2xl flex items-center justify-center text-2xl border border-indigo-500/30">
+                        <i class="ph-bold ph-chart-bar"></i>
+                    </div>
+                </div>
+
+                <div class="glass-card rounded-2xl p-5 border border-blue-500/20 flex items-center justify-between">
+                    <div>
+                        <p class="text-xs font-bold uppercase tracking-wider text-slate-400">Active Cards</p>
+                        <h3 id="stat-active-cards" class="text-2xl sm:text-3xl font-black text-white mt-1">0</h3>
+                        <p class="text-[10px] text-emerald-400 mt-1 font-semibold">Published in store</p>
+                    </div>
+                    <div class="w-12 h-12 bg-emerald-950 text-emerald-400 rounded-2xl flex items-center justify-center text-2xl border border-emerald-500/30">
+                        <i class="ph-bold ph-cards"></i>
+                    </div>
+                </div>
+            </div>
+
+            <!-- TOP DOWNLOADS LEADERBOARD SECTION -->
+            <div class="glass-card rounded-3xl p-6 border border-blue-500/20 shadow-2xl overflow-hidden relative">
+                <div class="absolute -right-20 -top-20 w-64 h-64 bg-amber-500/10 rounded-full blur-3xl pointer-events-none"></div>
+                
+                <div class="flex items-center justify-between mb-6 pb-4 border-b border-slate-800">
+                    <div>
+                        <h2 class="text-xl font-black text-white flex items-center gap-2">
+                            <i class="ph-bold ph-fire text-amber-400"></i> Top Download Ranking
+                        </h2>
+                        <p class="text-xs text-slate-400 mt-1">Real-time download counts synced with Column H in Google Sheet</p>
+                    </div>
+
+                    <button onclick="fetchApps()" class="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-xs font-bold text-slate-200 transition-all shadow-sm">
+                        <i class="ph-bold ph-arrows-clockwise"></i> Refresh Data
+                    </button>
+                </div>
+
+                <!-- TOP DOWNLOADS LIST CONTAINER -->
+                <div id="analytics-top-downloads-list" class="space-y-3 relative z-10">
+                </div>
+            </div>
         </div>
     </div>
 
     <script>
-        // WEB APP ENDPOINT URL
+        // Persistent Dark / Light appearance toggle
+        const themeToggle = document.getElementById('theme-toggle');
+        const themeToggleIcon = document.getElementById('theme-toggle-icon');
+        const themeToggleLabel = document.getElementById('theme-toggle-label');
+        function applyTheme(theme) {
+            const isLight = theme === 'light';
+            document.body.classList.toggle('light-theme', isLight);
+            if (themeToggle) themeToggle.setAttribute('aria-pressed', String(isLight));
+            if (themeToggleIcon) themeToggleIcon.className = `ph-bold ${isLight ? 'ph-moon' : 'ph-sun'} text-base`;
+            if (themeToggleLabel) themeToggleLabel.textContent = isLight ? 'Dark mode' : 'Light mode';
+            try { localStorage.setItem('creative-store-theme', isLight ? 'light' : 'dark'); } catch (e) {}
+        }
+        let savedTheme = 'dark';
+        try { savedTheme = localStorage.getItem('creative-store-theme') || 'dark'; } catch (e) {}
+        applyTheme(savedTheme);
+        if (themeToggle) themeToggle.addEventListener('click', () => {
+            applyTheme(document.body.classList.contains('light-theme') ? 'dark' : 'light');
+        });
+
+        // GOOGLE APPS SCRIPT WEB APP ENDPOINT URL
         const WEB_APP_URL = "https://script.google.com/macros/s/AKfycbxlkgKXkjXknbUZXHiv9eOChf61XVJmvJGrtMk-LFpnluv9Hzs5EHiITNhRs0KppnFOBw/exec";
 
-        // Application State
+        const categoryLabels = {
+            'shader': '3D / VFX',
+            'design': 'UI / UX',
+            'utility': 'Utilities'
+        };
+
+        // Application State Variables
         let appsData = [];
+        let filteredStudioApps = [];
+        let currentPage = 1;
+        const itemsPerPage = 12;
+
+        let activeCategory = 'all';
+        let activeSort = 'newest';
+        let searchQuery = '';
+
+        let editingCardId = null; 
+        let deletingCardId = null; 
+        
         let clickCount = 0;
         let clickTimeout = null;
         let isSubmitting = false;
@@ -377,7 +777,7 @@
         let currentLightboxImages = [];
         let currentLightboxIndex = 0;
 
-        // DOM Elements
+        // DOM Element Cache
         const appLoader = document.getElementById('app-loader');
         const loaderBar = document.getElementById('loader-bar');
         const loaderStatus = document.getElementById('loader-status');
@@ -392,7 +792,23 @@
         const verifyText = document.getElementById('verify-text');
         const verifySpinner = document.getElementById('verify-spinner');
 
+        const deleteModal = document.getElementById('delete-modal');
+        const deleteCardPreview = document.getElementById('delete-card-preview');
+        const cancelDeleteBtn = document.getElementById('cancel-delete-btn');
+        const confirmDeleteBtn = document.getElementById('confirm-delete-btn');
+        const deleteSpinner = document.getElementById('delete-spinner');
+
+        const studioLeftPanel = document.getElementById('studio-left-panel');
+        const studioCardsList = document.getElementById('studio-cards-list');
+        const studioSearchInput = document.getElementById('studio-search-input');
+        const clearSearchBtn = document.getElementById('clear-search-btn');
+        const cardsCountBadge = document.getElementById('cards-count-badge');
+
         const addAppForm = document.getElementById('add-app-form');
+        const formTitleHeading = document.getElementById('form-title-heading');
+        const formSubtitle = document.getElementById('form-subtitle');
+        const formModeTag = document.getElementById('form-mode-tag');
+        const resetFormBtn = document.getElementById('reset-form-btn');
         const timerInput = document.getElementById('form-timer');
         const timerDisplay = document.getElementById('timer-display');
         const submitIcon = document.getElementById('submit-icon');
@@ -403,7 +819,15 @@
         const loadingSpinner = document.getElementById('loading-spinner');
         const mockWarning = document.getElementById('mock-warning');
 
-        // Lightbox Elements
+        const paginationInfo = document.getElementById('pagination-info');
+        const pageDots = document.getElementById('page-dots');
+        const prevPageBtn = document.getElementById('prev-page-btn');
+        const nextPageBtn = document.getElementById('next-page-btn');
+
+        const storeSearchInput = document.getElementById('store-search-input');
+        const storeClearSearchBtn = document.getElementById('store-clear-search-btn');
+
+        // Lightbox DOM Elements
         const lightboxModal = document.getElementById('lightbox-modal');
         const lightboxImg = document.getElementById('lightbox-img');
         const lightboxCounter = document.getElementById('lightbox-counter');
@@ -411,12 +835,76 @@
         const prevLightboxBtn = document.getElementById('prev-lightbox-btn');
         const nextLightboxBtn = document.getElementById('next-lightbox-btn');
 
-        // Creative Loader Progress Manager
+        // Convert common Google Drive share links into image URLs suitable for <img>.
+        // The Drive file must be shared as "Anyone with the link" for public visitors.
+        function getDisplayImageUrl(value, size = 1600) {
+            const raw = String(value || '').trim();
+            if (!raw) return '';
+            try {
+                const parsed = new URL(raw);
+                const host = parsed.hostname.toLowerCase();
+                const isGoogleDrive = host === 'drive.google.com' || host.endsWith('.drive.google.com') || host === 'docs.google.com';
+                if (!isGoogleDrive) return raw;
+
+                let fileId = parsed.searchParams.get('id');
+                if (!fileId) {
+                    const match = parsed.pathname.match(/\/file\/d\/([^/]+)/) || parsed.pathname.match(/\/d\/([^/]+)/);
+                    if (match) fileId = match[1];
+                }
+                if (!fileId) return raw;
+                return `https://drive.google.com/thumbnail?id=${encodeURIComponent(fileId)}&sz=w${size}`;
+            } catch (e) {
+                return raw;
+            }
+        }
+
+        function getImageLinks(value) {
+            return String(value || '').split(/\r?\n/).map(link => link.trim()).filter(Boolean);
+        }
+
+        function updateDriveImagePreview() {
+            const input = document.getElementById('form-images');
+            const panel = document.getElementById('drive-image-preview');
+            const items = document.getElementById('drive-image-preview-items');
+            const status = document.getElementById('drive-image-preview-status');
+            if (!input || !panel || !items || !status) return;
+            const links = getImageLinks(input.value);
+            items.replaceChildren();
+            if (!links.length) {
+                panel.classList.add('hidden');
+                return;
+            }
+            panel.classList.remove('hidden');
+            links.slice(0, 8).forEach((link, index) => {
+                const wrap = document.createElement('div');
+                wrap.className = 'w-16';
+                const img = document.createElement('img');
+                img.src = getDisplayImageUrl(link, 240);
+                img.alt = `Image link ${index + 1}`;
+                img.className = 'w-16 h-16 rounded-lg object-cover bg-slate-800 border border-slate-700';
+                img.onerror = () => {
+                    img.removeAttribute('src');
+                    img.className = 'w-16 h-16 rounded-lg bg-slate-800 border border-amber-500/40';
+                    img.alt = 'Preview unavailable';
+                    const mark = document.createElement('div');
+                    mark.className = 'w-16 h-16 rounded-lg bg-slate-800 border border-amber-500/40 flex items-center justify-center text-amber-300 text-[10px] text-center p-1';
+                    mark.textContent = 'Check link';
+                    wrap.replaceChildren(mark);
+                };
+                const label = document.createElement('div');
+                label.className = 'text-[9px] text-slate-500 truncate mt-1';
+                label.textContent = `Image ${index + 1}`;
+                wrap.append(img, label);
+                items.append(wrap);
+            });
+            status.textContent = links.length > 8 ? `Showing preview of first 8 of ${links.length} links.` : `${links.length} image link(s). Preview may take a moment.`;
+        }
+
         function updateLoaderProgress(percent, statusText) {
             if (loaderBar) loaderBar.style.width = `${percent}%`;
             if (loaderPercent) loaderPercent.textContent = `${Math.round(percent)}%`;
             if (loaderStatus && statusText) {
-                loaderStatus.innerHTML = `<i class="ph-bold ph-circle-notch animate-spin text-indigo-400"></i> ${statusText}`;
+                loaderStatus.innerHTML = `<i class="ph-bold ph-circle-notch animate-spin text-blue-400"></i> ${statusText}`;
             }
         }
 
@@ -425,19 +913,18 @@
             setTimeout(() => {
                 if (appLoader) {
                     appLoader.classList.add('opacity-0', 'pointer-events-none');
-                    setTimeout(() => appLoader.remove(), 700);
+                    setTimeout(() => appLoader.remove(), 600);
                 }
-            }, 400);
+            }, 300);
         }
 
-        // Toast Feedback Generator
         function showToast(message, type = 'info') {
             const toastContainer = document.getElementById('toast-container');
             const toast = document.createElement('div');
-            const bgClass = type === 'success' ? 'bg-emerald-600' : type === 'error' ? 'bg-rose-600' : 'bg-indigo-600';
+            const bgClass = type === 'success' ? 'bg-emerald-600' : type === 'error' ? 'bg-rose-600' : 'bg-blue-600';
             
-            toast.className = `${bgClass} text-white px-4 py-3 rounded-xl shadow-xl flex items-center gap-2 text-sm font-medium transition-all duration-300 translate-y-4 opacity-0 pointer-events-auto`;
-            toast.innerHTML = `<i class="ph ph-${type === 'success' ? 'check-circle' : type === 'error' ? 'warning-circle' : 'info'} text-lg"></i> <span>${message}</span>`;
+            toast.className = `${bgClass} text-white px-4 py-3 rounded-2xl shadow-2xl flex items-center gap-2 text-xs font-bold transition-all duration-300 translate-y-4 opacity-0 pointer-events-auto border border-white/20`;
+            toast.innerHTML = `<i class="ph-bold ph-${type === 'success' ? 'check-circle' : type === 'error' ? 'warning-circle' : 'info'} text-base"></i> <span>${message}</span>`;
             
             toastContainer.appendChild(toast);
             
@@ -451,36 +938,38 @@
             }, 3500);
         }
 
-        // Fetch Apps Data (Connects with Web App)
-        async function fetchApps() {
-            updateLoaderProgress(25, "Initializing Creative Engine...");
-
-            let isDataLoaded = false;
-            let currentProgress = 25;
-
-            // Smooth progress simulation while fetching
-            const progressInterval = setInterval(() => {
-                if (currentProgress < 85 && !isDataLoaded) {
-                    currentProgress += Math.random() * 8 + 4;
-                    if (currentProgress > 50 && currentProgress < 75) {
-                        updateLoaderProgress(currentProgress, "Curating Creative Workflow Tools...");
-                    } else if (currentProgress >= 75) {
-                        updateLoaderProgress(currentProgress, "Finalizing Creative Studio Interface...");
-                    } else {
-                        updateLoaderProgress(currentProgress, "Optimizing Digital Utilities...");
-                    }
+        async function sendApiRequest(payload) {
+            try {
+                const actionParam = payload.action ? `?action=${encodeURIComponent(payload.action)}` : '';
+                const url = `${WEB_APP_URL}${actionParam}`;
+                const response = await fetch(url, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+                    body: JSON.stringify(payload)
+                });
+                const text = await response.text();
+                try {
+                    return JSON.parse(text);
+                } catch (e) {
+                    return { success: false, error: "Invalid response format from Google Sheet" };
                 }
-            }, 180);
+            } catch (err) {
+                console.error("Sheet Sync API Error:", err);
+                return { success: false, error: err.message || "Network error" };
+            }
+        }
+
+        async function fetchApps() {
+            if (appLoader && !appLoader.classList.contains('opacity-0')) {
+                updateLoaderProgress(30, "Retrieving cards & downloads from Google Sheets...");
+            }
 
             try {
                 const response = await fetch(`${WEB_APP_URL}?action=getApps`);
                 const data = await response.json();
-                
-                isDataLoaded = true;
-                clearInterval(progressInterval);
 
                 if (data && data.success && Array.isArray(data.apps)) {
-                    appsData = data.apps.reverse(); // Show newest first
+                    appsData = data.apps.reverse();
                 } else if (Array.isArray(data)) {
                     appsData = data.reverse();
                 } else {
@@ -488,74 +977,206 @@
                 }
             } catch (error) {
                 console.warn("Backend connection fallback active:", error);
-                isDataLoaded = true;
-                clearInterval(progressInterval);
-                useFallbackData();
+                if (appsData.length === 0) {
+                    useFallbackData();
+                }
             }
             
-            renderApps();
+            filteredStudioApps = [...appsData];
+            renderDashboardCards();
+            renderStudioCardsList();
+            renderAnalyticsTab();
             
             if (loadingSpinner) loadingSpinner.classList.add('hidden');
-            if (appsContainer) appsContainer.classList.remove('hidden');
-
             dismissAppLoader();
         }
 
-        // Fallback Mock Data if network or URL fails
         function useFallbackData() {
+            if (mockWarning) mockWarning.classList.remove('hidden');
             appsData = [
                 {
+                    id: 2,
                     images: "https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?w=800&auto=format&fit=crop\nhttps://images.unsplash.com/photo-1579783902614-a3fb3927b675?w=800&auto=format&fit=crop",
                     timer: "2",
+                    title: "RenderMaster 3D Workflow",
                     description: "3D Asset Shader & Texture Batch Processor. Speed up rendering workflows effortlessly with hardware acceleration.",
+                    category: "shader",
                     fileSize: "48 MB",
-                    downloadUrl: "#"
+                    downloadUrl: "https://example.com/download-shader",
+                    downloadCount: 142
                 },
                 {
+                    id: 3,
                     images: "https://images.unsplash.com/photo-1550745165-9bc0b252726f?w=800&auto=format&fit=crop",
                     timer: "3",
+                    title: "ChromaVector UI Engine",
                     description: "Vector Gradient & Color Palette Optimizer for Next-Gen UI/UX Design Pipelines.",
+                    category: "design",
                     fileSize: "18 MB",
-                    downloadUrl: "#"
+                    downloadUrl: "https://example.com/download-palette",
+                    downloadCount: 89
+                },
+                {
+                    id: 4,
+                    images: "https://images.unsplash.com/photo-1634017839464-5c339ebe3cb4?w=800&auto=format&fit=crop",
+                    timer: "2",
+                    title: "MotionCache Clearer",
+                    description: "Motion Graphics Pre-render Cache Cleaner and RAM Allocator.",
+                    category: "utility",
+                    fileSize: "24 MB",
+                    downloadUrl: "https://example.com/download-cache",
+                    downloadCount: 215
                 }
             ];
         }
 
-        // Render Apps to Grid
-        function renderApps() {
+        function handleDownloadClick(appId, url) {
+            const app = appsData.find(a => a.id === appId);
+            if (app) {
+                app.downloadCount = (parseInt(app.downloadCount) || 0) + 1;
+                // Only update analytics in the background so it feels snappy
+                renderAnalyticsTab(); 
+            }
+
+            // Sync with correct column in Google Script backend
+            sendApiRequest({
+                action: "trackDownload",
+                id: appId
+            }).catch(err => console.error("Error tracking download:", err));
+
+            if (url && url !== "#") {
+                window.open(url, '_blank', 'noopener,noreferrer');
+            }
+        }
+
+        function copyToClipboard(text) {
+            if (navigator.clipboard && navigator.clipboard.writeText) {
+                navigator.clipboard.writeText(text);
+                showToast("Link copied to clipboard!", "success");
+            } else {
+                showToast("Could not copy link automatically.", "error");
+            }
+        }
+
+        function getFilteredAndSortedApps() {
+            let list = [...appsData];
+
+            if (searchQuery) {
+                const q = searchQuery.toLowerCase();
+                list = list.filter(app => 
+                    (app.title && app.title.toLowerCase().includes(q)) ||
+                    (app.description && app.description.toLowerCase().includes(q)) ||
+                    (app.fileSize && app.fileSize.toLowerCase().includes(q))
+                );
+            }
+
+            if (activeCategory !== 'all') {
+                list = list.filter(app => (app.category || 'utility') === activeCategory);
+            }
+
+            if (activeSort === 'popular') {
+                list.sort((a, b) => (parseInt(b.downloadCount) || 0) - (parseInt(a.downloadCount) || 0));
+            } else if (activeSort === 'name') {
+                list.sort((a, b) => (a.title || '').localeCompare(b.title || ''));
+            }
+
+            return list;
+        }
+
+        function setCategoryFilter(category) {
+            activeCategory = category;
+            const buttons = ['all', 'shader', 'design', 'utility'];
+            buttons.forEach(cat => {
+                const btn = document.getElementById(`cat-btn-${cat}`);
+                if (!btn) return;
+                if (cat === category) {
+                    btn.className = "px-3 py-1.5 rounded-lg font-extrabold transition-all bg-blue-600 text-white shadow-sm";
+                } else {
+                    btn.className = "px-3 py-1.5 rounded-lg font-semibold text-slate-400 hover:text-white transition-all";
+                }
+            });
+            currentPage = 1;
+            renderDashboardCards();
+        }
+
+        function handleSortChange() {
+            const select = document.getElementById('store-sort-select');
+            activeSort = select.value;
+            currentPage = 1;
+            renderDashboardCards();
+        }
+
+        if (storeSearchInput) {
+            storeSearchInput.addEventListener('input', (e) => {
+                searchQuery = e.target.value.trim();
+                if (searchQuery.length > 0) {
+                    storeClearSearchBtn.classList.remove('hidden');
+                } else {
+                    storeClearSearchBtn.classList.add('hidden');
+                }
+                currentPage = 1;
+                renderDashboardCards();
+            });
+        }
+
+        if (storeClearSearchBtn) {
+            storeClearSearchBtn.addEventListener('click', () => {
+                storeSearchInput.value = '';
+                searchQuery = '';
+                storeClearSearchBtn.classList.add('hidden');
+                currentPage = 1;
+                renderDashboardCards();
+            });
+        }
+
+        function renderDashboardCards() {
             carouselIntervals.forEach(clearInterval);
             carouselIntervals = [];
 
-            if (appsData.length === 0) {
-                appsContainer.innerHTML = `<div class="col-span-full text-center py-20 text-slate-400 font-medium">No tools available yet in store.</div>`;
+            const processedApps = getFilteredAndSortedApps();
+
+            if (processedApps.length === 0) {
+                appsContainer.innerHTML = `<div class="col-span-full text-center py-20 text-slate-400 font-medium">No tools found matching your criteria.</div>`;
+                paginationInfo.textContent = "Showing 0 cards";
+                pageDots.innerHTML = '';
                 return;
             }
 
+            const totalPages = Math.ceil(processedApps.length / itemsPerPage) || 1;
+            if (currentPage > totalPages) currentPage = totalPages;
+            if (currentPage < 1) currentPage = 1;
+
+            const startIndex = (currentPage - 1) * itemsPerPage;
+            const endIndex = Math.min(startIndex + itemsPerPage, processedApps.length);
+            const pageItems = processedApps.slice(startIndex, endIndex);
+
             let html = '';
-            appsData.forEach((app, index) => {
-                const imagesList = app.images ? app.images.split('\n').map(img => img.trim()).filter(img => img !== "") : [];
+            pageItems.forEach((app, idx) => {
+                const globalIndex = appsData.findIndex(a => a.id === app.id);
+                const imagesList = app.images ? app.images.split('\n').map(img => img.trim()).filter(img => img !== "").map(img => getDisplayImageUrl(img)) : [];
                 const timerMs = (parseInt(app.timer) || 2) * 1000;
-                
                 const imagesJson = JSON.stringify(imagesList).replace(/"/g, '&quot;');
+                const downloadLink = escapeHTML(app.downloadUrl || '#');
+                const catLabel = categoryLabels[app.category] || 'Utility';
                 
                 let imageElement = '';
                 let dotsElement = '';
 
                 if (imagesList.length > 0) {
                     imageElement = `
-                        <div class="group/img cursor-zoom-in w-full h-full relative" onclick="openLightbox(${index})">
+                        <div class="group/img cursor-zoom-in w-full h-full relative" onclick="openLightbox(${globalIndex})">
                             <img 
                                 src="${imagesList[0]}" 
                                 alt="App Screenshot" 
                                 class="carousel-img w-full h-full object-cover transition-opacity duration-500"
-                                data-app-index="${index}"
+                                data-app-index="${globalIndex}"
                                 data-images="${imagesJson}"
                                 data-timer="${timerMs}"
                                 data-current-index="0"
-                                onerror="this.src='https://placehold.co/400x300/e2e8f0/94a3b8?text=Image+Preview'"
+                                onerror="this.src='https://placehold.co/400x300/0f172a/38bdf8?text=Image+Preview'"
                             />
-                            <div class="absolute inset-0 bg-slate-900/20 opacity-0 group-hover/img:opacity-100 transition-opacity flex items-center justify-center">
-                                <span class="bg-white/90 backdrop-blur-sm text-slate-800 text-xs font-semibold px-3 py-1.5 rounded-full shadow-lg flex items-center gap-1.5">
+                            <div class="absolute inset-0 bg-slate-950/40 opacity-0 group-hover/img:opacity-100 transition-opacity flex items-center justify-center">
+                                <span class="bg-slate-900/90 border border-blue-500/40 text-blue-300 text-xs font-semibold px-3.5 py-1.5 rounded-full shadow-lg flex items-center gap-1.5">
                                     <i class="ph ph-magnifying-glass-plus"></i> Zoom
                                 </span>
                             </div>
@@ -563,8 +1184,8 @@
                     `;
 
                     if (imagesList.length > 1) {
-                        let dots = imagesList.map((_, idx) => `
-                            <div class="dot w-1.5 h-1.5 rounded-full transition-all ${idx === 0 ? 'bg-white w-3' : 'bg-white/50'}"></div>
+                        let dots = imagesList.map((_, dotIdx) => `
+                            <div class="dot w-1.5 h-1.5 rounded-full transition-all ${dotIdx === 0 ? 'bg-cyan-400 w-3' : 'bg-white/40'}"></div>
                         `).join('');
                         
                         dotsElement = `
@@ -574,31 +1195,40 @@
                         `;
                     }
                 } else {
-                    imageElement = `<i class="ph ph-image text-5xl text-slate-300"></i>`;
+                    imageElement = `<i class="ph ph-image text-5xl text-slate-600"></i>`;
                 }
 
                 html += `
-                    <div class="bg-white rounded-2xl p-4 shadow-xl shadow-slate-200/50 hover:shadow-2xl hover:-translate-y-1 transition-all duration-300 border border-slate-100 flex flex-col h-full">
-                        <div class="carousel-container relative w-full h-48 rounded-xl overflow-hidden bg-slate-100 mb-4 flex items-center justify-center">
+                    <div class="glass-card glass-card-hover rounded-2xl p-4 transition-all duration-300 flex flex-col h-full relative group">
+                        <div class="carousel-container relative w-full h-48 rounded-xl overflow-hidden bg-slate-950 mb-4 flex items-center justify-center border border-slate-800">
                             ${imageElement}
                             ${dotsElement}
+                            
+                            <!-- Category Badge -->
+                            <div class="absolute top-2 right-2 bg-slate-900/90 backdrop-blur-md border border-blue-500/40 text-blue-300 px-3 py-1 rounded-full text-[10px] font-black tracking-wider uppercase shadow-md">
+                                ${catLabel}
+                            </div>
+
+                            <button onclick="copyToClipboard('${downloadLink}')" class="absolute top-2 left-2 bg-slate-950/80 hover:bg-slate-900 backdrop-blur-md border border-slate-700 text-slate-300 p-1.5 rounded-xl text-xs transition-all shadow-md" title="Copy Download URL">
+                                <i class="ph-bold ph-copy"></i>
+                            </button>
                         </div>
 
                         <div class="flex-grow flex flex-col">
-                            <p class="text-slate-600 text-sm mb-4 flex-grow whitespace-pre-wrap leading-relaxed font-normal">${escapeHTML(app.description)}</p>
+                            <!-- Card Title Added on top of description -->
+                            <h3 class="text-sm font-black text-white mb-1.5 leading-tight group-hover:text-blue-400 transition-colors">${escapeHTML(app.title || 'Untitled Tool')}</h3>
+                            <p class="text-slate-300 text-xs mb-4 flex-grow whitespace-pre-wrap leading-relaxed font-normal">${escapeHTML(app.description)}</p>
                             
-                            <div class="flex items-center justify-between mt-auto pt-4 border-t border-slate-100">
-                                <span class="text-xs font-semibold bg-slate-100 text-slate-500 px-2.5 py-1 rounded-lg">
+                            <div class="flex items-center justify-between mt-auto pt-4 border-t border-slate-800/80">
+                                <span class="text-[11px] font-extrabold bg-blue-950/80 border border-blue-500/30 text-blue-300 px-2.5 py-1 rounded-lg">
                                     ${escapeHTML(app.fileSize || 'Standard')}
                                 </span>
-                                <a 
-                                    href="${app.downloadUrl || '#'}" 
-                                    target="_blank" 
-                                    rel="noopener noreferrer"
-                                    class="flex items-center gap-2 bg-indigo-600 hover:bg-indigo-700 active:scale-95 text-white text-sm font-medium px-4 py-2 rounded-xl transition-all shadow-md shadow-indigo-200"
+                                <button 
+                                    onclick="handleDownloadClick(${app.id}, '${downloadLink}')"
+                                    class="flex items-center gap-2 bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-500 hover:to-indigo-500 active:scale-95 text-white text-xs font-bold px-4 py-2 rounded-xl transition-all shadow-lg shadow-blue-600/30"
                                 >
-                                    <i class="ph ph-download-simple"></i> Get Tool
-                                </a>
+                                    <i class="ph-bold ph-download-simple text-sm"></i> Get Tool
+                                </button>
                             </div>
                         </div>
                     </div>
@@ -607,9 +1237,38 @@
 
             appsContainer.innerHTML = html;
             initCarousels();
+
+            paginationInfo.textContent = `Showing ${startIndex + 1}-${endIndex} of ${processedApps.length} cards`;
+            prevPageBtn.disabled = currentPage === 1;
+            nextPageBtn.disabled = currentPage === totalPages;
+
+            let dotsHtml = '';
+            for (let i = 1; i <= totalPages; i++) {
+                if (i === currentPage) {
+                    dotsHtml += `<button onclick="goToPage(${i})" class="w-7 h-7 rounded-lg bg-blue-600 text-white text-xs font-bold transition-all shadow-lg shadow-blue-600/30">${i}</button>`;
+                } else {
+                    dotsHtml += `<button onclick="goToPage(${i})" class="w-7 h-7 rounded-lg bg-slate-900/80 border border-slate-700 text-slate-400 hover:bg-slate-800 hover:text-white text-xs font-semibold transition-all">${i}</button>`;
+                }
+            }
+            pageDots.innerHTML = dotsHtml;
         }
 
-        // Initialize Automatic Image Cycling
+        function goToPage(page) {
+            currentPage = page;
+            renderDashboardCards();
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        prevPageBtn.addEventListener('click', () => {
+            if (currentPage > 1) goToPage(currentPage - 1);
+        });
+
+        nextPageBtn.addEventListener('click', () => {
+            const processed = getFilteredAndSortedApps();
+            const totalPages = Math.ceil(processed.length / itemsPerPage);
+            if (currentPage < totalPages) goToPage(currentPage + 1);
+        });
+
         function initCarousels() {
             const containers = document.querySelectorAll('.carousel-container');
             containers.forEach(container => {
@@ -638,9 +1297,9 @@
                             const dots = dotsContainer.querySelectorAll('.dot');
                             dots.forEach((dot, idx) => {
                                 if (idx === currentIndex) {
-                                    dot.className = "dot w-3 h-1.5 rounded-full bg-white transition-all";
+                                    dot.className = "dot w-3 h-1.5 rounded-full bg-cyan-400 transition-all";
                                 } else {
-                                    dot.className = "dot w-1.5 h-1.5 rounded-full bg-white/50 transition-all";
+                                    dot.className = "dot w-1.5 h-1.5 rounded-full bg-white/40 transition-all";
                                 }
                             });
                         }
@@ -650,12 +1309,281 @@
             });
         }
 
-        // Lightbox Functions
+        function switchStudioTab(tab) {
+            const tabBtnCards = document.getElementById('tab-btn-cards');
+            const tabBtnAnalytic = document.getElementById('tab-btn-analytic');
+            const contentCards = document.getElementById('studio-tab-cards-content');
+            const contentAnalytic = document.getElementById('studio-tab-analytic-content');
+
+            if (tab === 'cards') {
+                tabBtnCards.className = "flex items-center gap-2 px-4 py-2 rounded-xl text-xs font-bold transition-all bg-blue-600 text-white shadow-md";
+                tabBtnAnalytic.className = "flex items-center gap-2 px-4 py-2 rounded-xl text-xs font-bold transition-all text-slate-400 hover:text-white";
+                contentCards.classList.remove('hidden');
+                contentAnalytic.classList.add('hidden');
+            } else if (tab === 'analytic') {
+                tabBtnAnalytic.className = "flex items-center gap-2 px-4 py-2 rounded-xl text-xs font-bold transition-all bg-blue-600 text-white shadow-md";
+                tabBtnCards.className = "flex items-center gap-2 px-4 py-2 rounded-xl text-xs font-bold transition-all text-slate-400 hover:text-white";
+                contentCards.classList.add('hidden');
+                contentAnalytic.classList.remove('hidden');
+                renderAnalyticsTab();
+            }
+        }
+
+        function renderAnalyticsTab() {
+            const listContainer = document.getElementById('analytics-top-downloads-list');
+            
+            const totalApps = appsData.length;
+            let totalDownloads = 0;
+            let sortedApps = [...appsData].sort((a, b) => (parseInt(b.downloadCount) || 0) - (parseInt(a.downloadCount) || 0));
+
+            sortedApps.forEach(app => {
+                totalDownloads += (parseInt(app.downloadCount) || 0);
+            });
+
+            const avgDownloads = totalApps > 0 ? Math.round(totalDownloads / totalApps) : 0;
+            const topApp = sortedApps.length > 0 ? sortedApps[0] : null;
+
+            document.getElementById('stat-total-downloads').textContent = totalDownloads.toLocaleString();
+            document.getElementById('stat-active-cards').textContent = totalApps;
+            document.getElementById('stat-avg-downloads').textContent = avgDownloads.toLocaleString();
+
+            if (topApp && (parseInt(topApp.downloadCount) || 0) > 0) {
+                document.getElementById('stat-top-tool-name').textContent = topApp.title || `Card #${topApp.id}`;
+                document.getElementById('stat-top-tool-count').textContent = `${(parseInt(topApp.downloadCount) || 0).toLocaleString()} downloads`;
+            } else {
+                document.getElementById('stat-top-tool-name').textContent = "None";
+                document.getElementById('stat-top-tool-count').textContent = "0 downloads";
+            }
+
+            if (sortedApps.length === 0) {
+                listContainer.innerHTML = `<div class="p-8 text-center text-slate-400 text-xs font-medium">No tools found in library to display analytics.</div>`;
+                return;
+            }
+
+            const maxDl = topApp ? (parseInt(topApp.downloadCount) || 1) : 1;
+
+            let html = '';
+            sortedApps.forEach((app, idx) => {
+                const dlCount = parseInt(app.downloadCount) || 0;
+                const percent = maxDl > 0 ? Math.min(100, Math.round((dlCount / maxDl) * 100)) : 0;
+                const imagesList = app.images ? app.images.split('\n').map(img => img.trim()).filter(img => img !== "").map(img => getDisplayImageUrl(img)) : [];
+                const firstImg = imagesList.length > 0 ? imagesList[0] : 'https://placehold.co/100x100/0f172a/38bdf8?text=No+Img';
+                const catLabel = categoryLabels[app.category] || 'Utility';
+
+                let rankBadge = '';
+                let extraStyles = '';
+                
+                // Creative Animations applied via CSS
+                if (idx === 0) {
+                    rankBadge = `<span class="w-8 h-8 rounded-xl bg-amber-500/20 text-amber-400 border border-amber-500/40 font-black text-xs flex items-center justify-center flex-shrink-0"><i class="ph-bold ph-trophy"></i></span>`;
+                    extraStyles = 'border-amber-500/40 shine-effect bg-gradient-to-r from-amber-500/10 to-transparent';
+                } else if (idx === 1) {
+                    rankBadge = `<span class="w-8 h-8 rounded-xl bg-slate-400/20 text-slate-300 border border-slate-400/40 font-black text-xs flex items-center justify-center flex-shrink-0">#2</span>`;
+                    extraStyles = 'border-slate-600 border';
+                } else if (idx === 2) {
+                    rankBadge = `<span class="w-8 h-8 rounded-xl bg-orange-600/20 text-orange-400 border border-orange-500/40 font-black text-xs flex items-center justify-center flex-shrink-0">#3</span>`;
+                    extraStyles = 'border-orange-900 border';
+                } else {
+                    rankBadge = `<span class="w-8 h-8 rounded-xl bg-slate-800 text-slate-400 border border-slate-700 font-bold text-xs flex items-center justify-center flex-shrink-0">#${idx + 1}</span>`;
+                    extraStyles = 'border-slate-800/80 border';
+                }
+
+                html += `
+                    <div class="animate-slide-up leaderboard-card p-4 bg-slate-950/80 rounded-2xl flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 ${extraStyles}" style="animation-delay: ${idx * 0.08}s">
+                        <div class="flex items-center gap-3 overflow-hidden w-full sm:w-auto">
+                            ${rankBadge}
+                            <img src="${firstImg}" alt="Thumb" class="w-12 h-12 rounded-xl object-cover border border-slate-800 flex-shrink-0" onerror="this.src='https://placehold.co/100x100/0f172a/38bdf8?text=Img'" />
+                            <div class="overflow-hidden flex-grow">
+                                <h4 class="text-xs font-bold text-white truncate max-w-sm">${escapeHTML(app.title || 'Untitled Tool')}</h4>
+                                <p class="text-[10px] text-slate-400 font-mono mt-0.5 truncate">${catLabel} • Row #${app.id}</p>
+                            </div>
+                        </div>
+
+                        <div class="w-full sm:w-72 flex flex-col gap-1.5 flex-shrink-0">
+                            <div class="flex items-center justify-between text-xs font-bold">
+                                <span class="text-blue-400 flex items-center gap-1">
+                                    <i class="ph-bold ph-download-simple"></i> ${dlCount.toLocaleString()} downloads
+                                </span>
+                                <span class="text-[10px] font-mono text-slate-500">${percent}% of top</span>
+                            </div>
+                            <div class="w-full bg-slate-900 h-2 rounded-full overflow-hidden border border-slate-800">
+                                <div class="bg-gradient-to-r from-blue-500 to-cyan-400 h-full rounded-full transition-all duration-500" style="width: ${percent}%;"></div>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            });
+
+            listContainer.innerHTML = html;
+        }
+
+        function renderStudioCardsList() {
+            cardsCountBadge.textContent = `${filteredStudioApps.length} Cards`;
+
+            if (filteredStudioApps.length === 0) {
+                studioCardsList.innerHTML = `<div class="p-8 text-center text-xs text-slate-400 font-medium">No cards found in library.</div>`;
+                return;
+            }
+
+            let html = '';
+            filteredStudioApps.forEach((app) => {
+                const imagesList = app.images ? app.images.split('\n').map(img => img.trim()).filter(img => img !== "").map(img => getDisplayImageUrl(img)) : [];
+                const firstImg = imagesList.length > 0 ? imagesList[0] : 'https://placehold.co/100x100/0f172a/38bdf8?text=No+Img';
+                const isEditing = editingCardId === app.id;
+                const dlCount = parseInt(app.downloadCount) || 0;
+
+                html += `
+                    <div class="p-3 hover:bg-slate-900/80 transition-all rounded-2xl flex items-center justify-between gap-3 ${isEditing ? 'bg-blue-950/80 border-2 border-blue-500' : ''}">
+                        <div class="flex items-center gap-3 overflow-hidden">
+                            <img src="${firstImg}" alt="Card Thumb" class="w-12 h-12 rounded-xl object-cover border border-slate-800 flex-shrink-0" onerror="this.src='https://placehold.co/100x100/0f172a/38bdf8?text=Img'" />
+                            <div class="overflow-hidden">
+                                <p class="text-xs font-bold text-white truncate">${escapeHTML(app.title || 'Untitled Tool')} <span class="text-slate-400 font-normal">- ${escapeHTML(app.description)}</span></p>
+                                <p class="text-[10px] text-blue-400 font-mono mt-0.5 truncate"><i class="ph-bold ph-download-simple"></i> ${dlCount} Downloads • Row #${app.id}</p>
+                            </div>
+                        </div>
+
+                        <div class="flex items-center gap-1 flex-shrink-0">
+                            <button onclick="startEditingCard(${app.id})" class="p-2 rounded-xl bg-slate-900 hover:bg-blue-600 text-slate-300 hover:text-white transition-all text-sm border border-slate-800" title="Re-edit Card">
+                                <i class="ph-bold ph-pencil-simple"></i>
+                            </button>
+                            <button onclick="promptDeleteCard(${app.id})" class="p-2 rounded-xl bg-slate-900 hover:bg-rose-600 text-slate-300 hover:text-white transition-all text-sm border border-slate-800" title="Delete Card from Sheet">
+                                <i class="ph-bold ph-trash"></i>
+                            </button>
+                        </div>
+                    </div>
+                `;
+            });
+
+            studioCardsList.innerHTML = html;
+        }
+
+        studioSearchInput.addEventListener('input', (e) => {
+            const query = e.target.value.toLowerCase().trim();
+            if (query.length > 0) {
+                clearSearchBtn.classList.remove('hidden');
+            } else {
+                clearSearchBtn.classList.add('hidden');
+            }
+
+            filteredStudioApps = appsData.filter(app => 
+                (app.title && app.title.toLowerCase().includes(query)) ||
+                (app.description && app.description.toLowerCase().includes(query)) ||
+                (app.downloadUrl && app.downloadUrl.toLowerCase().includes(query)) ||
+                (app.fileSize && app.fileSize.toLowerCase().includes(query))
+            );
+
+            renderStudioCardsList();
+        });
+
+        clearSearchBtn.addEventListener('click', () => {
+            studioSearchInput.value = '';
+            clearSearchBtn.classList.add('hidden');
+            filteredStudioApps = [...appsData];
+            renderStudioCardsList();
+        });
+
+        function startEditingCard(id) {
+            const app = appsData.find(a => a.id === id);
+            if (!app) return;
+
+            editingCardId = id;
+            
+            document.getElementById('form-images').value = app.images || '';
+            updateDriveImagePreview();
+            timerInput.value = app.timer || '2';
+            timerDisplay.textContent = `${timerInput.value} Seconds`;
+            document.getElementById('form-title').value = app.title || '';
+            document.getElementById('form-category').value = app.category || 'utility';
+            document.getElementById('form-description').value = app.description || '';
+            document.getElementById('form-filesize').value = app.fileSize || '';
+            document.getElementById('form-downloadurl').value = app.downloadUrl || '';
+            document.getElementById('form-downloadcount').value = app.downloadCount || 0;
+
+            formTitleHeading.textContent = "Re-edit App Card";
+            formSubtitle.textContent = `Updating Card Row #${id} in Google Sheet`;
+            formModeTag.textContent = "RE-EDIT MODE";
+            formModeTag.className = "px-2.5 py-0.5 rounded-full text-[10px] font-extrabold bg-amber-950 text-amber-400 border border-amber-500/30 uppercase tracking-wider";
+            submitText.textContent = "Save Changes to Sheet";
+            resetFormBtn.classList.remove('hidden');
+
+            renderStudioCardsList();
+        }
+
+        function resetFormToCreateMode() {
+            editingCardId = null;
+            addAppForm.reset();
+            updateDriveImagePreview();
+            timerDisplay.textContent = "2 Seconds";
+            document.getElementById('form-category').value = "utility";
+            document.getElementById('form-downloadcount').value = "0";
+
+            formTitleHeading.textContent = "Create New App Card";
+            formSubtitle.textContent = "Fill out card parameters to publish to Creative Store & Google Sheet.";
+            formModeTag.textContent = "CREATE MODE";
+            formModeTag.className = "px-2.5 py-0.5 rounded-full text-[10px] font-extrabold bg-emerald-950 text-emerald-400 border border-emerald-500/30 uppercase tracking-wider";
+            submitText.textContent = "Publish App Card";
+            resetFormBtn.classList.add('hidden');
+
+            renderStudioCardsList();
+        }
+
+        resetFormBtn.addEventListener('click', resetFormToCreateMode);
+
+        function promptDeleteCard(id) {
+            const app = appsData.find(a => a.id === id);
+            if (!app) return;
+
+            deletingCardId = id;
+            deleteCardPreview.textContent = `Row #${id}: ` + (app.title || app.description || 'App Card Entry');
+            deleteModal.classList.remove('hidden');
+        }
+
+        cancelDeleteBtn.addEventListener('click', () => {
+            deleteModal.classList.add('hidden');
+            deletingCardId = null;
+        });
+
+        confirmDeleteBtn.addEventListener('click', async () => {
+            if (!deletingCardId) return;
+
+            setDeleteLoading(true);
+
+            const result = await sendApiRequest({
+                action: "deleteApp",
+                id: deletingCardId
+            });
+
+            if (result && result.success) {
+                showToast("App card deleted from Google Sheet!", "success");
+            } else {
+                showToast(result ? result.error : "Could not delete from sheet", "error");
+            }
+
+            deleteModal.classList.add('hidden');
+            setDeleteLoading(false);
+
+            if (editingCardId === deletingCardId) {
+                resetFormToCreateMode();
+            }
+            deletingCardId = null;
+
+            await fetchApps();
+        });
+
+        function setDeleteLoading(isLoading) {
+            confirmDeleteBtn.disabled = isLoading;
+            if (isLoading) {
+                deleteSpinner.classList.remove('hidden');
+            } else {
+                deleteSpinner.classList.add('hidden');
+            }
+        }
+
         function openLightbox(appIndex) {
             const app = appsData[appIndex];
             if (!app) return;
             
-            const imagesList = app.images ? app.images.split('\n').map(img => img.trim()).filter(img => img !== "") : [];
+            const imagesList = app.images ? app.images.split('\n').map(img => img.trim()).filter(img => img !== "").map(img => getDisplayImageUrl(img)) : [];
             if (imagesList.length === 0) return;
 
             const imgEl = document.querySelector(`.carousel-img[data-app-index="${appIndex}"]`);
@@ -702,7 +1630,6 @@
         }
 
         closeLightboxBtn.addEventListener('click', closeLightbox);
-        
         lightboxModal.addEventListener('click', (e) => {
             if (e.target === lightboxModal) closeLightbox();
         });
@@ -732,20 +1659,15 @@
             }
         });
 
-        // Secret Blue Dot Admin Trigger
         document.getElementById('secret-dot').addEventListener('click', () => {
             if (clickTimeout) clearTimeout(clickTimeout);
-            
             clickCount++;
             if (clickCount >= 3) {
                 pinModal.classList.remove('hidden');
                 pinInput.focus();
                 clickCount = 0;
             }
-
-            clickTimeout = setTimeout(() => {
-                clickCount = 0;
-            }, 1500);
+            clickTimeout = setTimeout(() => { clickCount = 0; }, 1500);
         });
 
         document.getElementById('close-pin-btn').addEventListener('click', () => {
@@ -754,7 +1676,6 @@
             pinError.classList.add('hidden');
         });
 
-        // PIN Verification
         async function verifyPin() {
             const pin = pinInput.value.trim();
             if (!pin) return;
@@ -762,37 +1683,22 @@
             setVerifyLoading(true);
             pinError.classList.add('hidden');
 
-            try {
-                const response = await fetch(WEB_APP_URL, {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'text/plain;charset=utf-8' },
-                    body: JSON.stringify({ action: "verifyPin", pin: pin })
-                });
-                const data = await response.json();
-                
-                if (data.success) {
-                    openAdminView();
-                } else {
-                    if (pin === "1234") {
-                        openAdminView();
-                    } else {
-                        showPinError("Invalid Security PIN");
-                    }
-                }
-            } catch (error) {
+            const result = await sendApiRequest({ action: "verifyPin", pin: pin });
+            
+            if (result && result.success) {
+                openAdminView();
+            } else {
                 if (pin === "1234") {
                     openAdminView();
                 } else {
-                    showPinError("Invalid Security PIN");
+                    showPinError(result ? result.error : "Invalid Security PIN");
                 }
             }
             setVerifyLoading(false);
         }
 
         verifyPinBtn.addEventListener('click', verifyPin);
-        pinInput.addEventListener('keydown', (e) => {
-            if (e.key === 'Enter') verifyPin();
-        });
+        pinInput.addEventListener('keydown', (e) => { if (e.key === 'Enter') verifyPin(); });
 
         function showPinError(msg) {
             pinError.textContent = msg;
@@ -806,18 +1712,31 @@
             storeView.classList.add('hidden');
             adminView.classList.remove('hidden');
             pinInput.value = '';
+            switchStudioTab('cards');
         }
 
         document.getElementById('back-to-store-btn').addEventListener('click', () => {
             adminView.classList.add('hidden');
             storeView.classList.remove('hidden');
         });
+        const backBtnMobile = document.getElementById('back-to-store-btn-mobile');
+        if (backBtnMobile) {
+            backBtnMobile.addEventListener('click', () => {
+                adminView.classList.add('hidden');
+                storeView.classList.remove('hidden');
+            });
+        }
 
         timerInput.addEventListener('input', (e) => {
             timerDisplay.textContent = `${e.target.value} Seconds`;
         });
 
-        // Handle Add App Form Submission
+        const imageUrlsInput = document.getElementById('form-images');
+        if (imageUrlsInput) {
+            imageUrlsInput.addEventListener('input', updateDriveImagePreview);
+            imageUrlsInput.addEventListener('paste', () => setTimeout(updateDriveImagePreview, 0));
+        }
+
         addAppForm.addEventListener('submit', async (e) => {
             e.preventDefault();
             if (isSubmitting) return;
@@ -825,44 +1744,32 @@
             setSubmitLoading(true);
 
             const formData = {
-                images: document.getElementById('form-images').value,
+                images: document.getElementById('form-images').value.trim(),
                 timer: timerInput.value,
-                description: document.getElementById('form-description').value,
-                fileSize: document.getElementById('form-filesize').value,
-                downloadUrl: document.getElementById('form-downloadurl').value
+                title: document.getElementById('form-title').value.trim(),
+                category: document.getElementById('form-category').value,
+                description: document.getElementById('form-description').value.trim(),
+                fileSize: document.getElementById('form-filesize').value.trim(),
+                downloadUrl: document.getElementById('form-downloadurl').value.trim(),
+                downloadCount: document.getElementById('form-downloadcount').value.trim()
             };
 
-            try {
-                const response = await fetch(WEB_APP_URL, {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'text/plain;charset=utf-8' },
-                    body: JSON.stringify({ action: "addApp", ...formData })
-                });
-                
-                const data = await response.json();
-                if (data.success) {
-                    showToast("New utility successfully published!", "success");
-                    addAppForm.reset();
-                    timerDisplay.textContent = "2 Seconds";
-                    
-                    adminView.classList.add('hidden');
-                    storeView.classList.remove('hidden');
-                    fetchApps(); 
-                } else {
-                    showToast("Failed to publish: " + (data.error || "Unknown response"), "error");
-                }
-            } catch (error) {
-                showToast("Entry saved in current session.", "info");
-                appsData.unshift(formData);
-                renderApps();
-                addAppForm.reset();
-                adminView.classList.add('hidden');
-                storeView.classList.remove('hidden');
+            const isEditMode = Boolean(editingCardId);
+            const action = isEditMode ? "updateApp" : "addApp";
+            const payload = isEditMode ? { action, id: editingCardId, ...formData } : { action, ...formData };
+
+            const result = await sendApiRequest(payload);
+
+            if (result && result.success) {
+                showToast(isEditMode ? "Card updated in Google Sheet!" : "New card published to Google Sheet!", "success");
+                resetFormToCreateMode();
+                await fetchApps();
+            } else {
+                showToast(result ? result.error : "Failed to update sheet", "error");
             }
             setSubmitLoading(false);
         });
 
-        // Helper functions
         function setVerifyLoading(isLoading) {
             isSubmitting = isLoading;
             verifyPinBtn.disabled = isLoading;
@@ -902,7 +1809,6 @@
             );
         }
 
-        // Initialize App on Window Load
         window.addEventListener('load', fetchApps);
     </script>
 </body>
